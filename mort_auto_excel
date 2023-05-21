@@ -1,0 +1,61 @@
+import pandas as pd
+import sqlite3
+from sqlalchemy import create_engine
+
+
+# data = pd.read_excel(r"C:\\vs code\\mortage_auto\\django_mortgage\\Book1.xlsx", sheet_name=None)
+# df = pd.concat(data.values(), ignore_index=False)
+connection = sqlite3.connect(r'C:\\vs code\\mortage_auto\\django_mortgage\\db.sqlite3')
+
+# df.to_sql('All_sheets_1', connection, if_exists='append')
+cursor = connection.cursor()
+
+query_all_auditClient = 'SELECT  `Audit Client` FROM All_sheets_1'
+cursor.execute(query_all_auditClient)
+results_all_auditClient = cursor.fetchall()
+
+query_auditClient = 'SELECT DISTINCT `Audit Client` FROM All_sheets_1'
+cursor.execute(query_auditClient)
+results_auditClient = cursor.fetchall()
+
+query_License = 'SELECT DISTINCT `License` FROM All_sheets_1'
+cursor.execute(query_License)
+results_License = cursor.fetchall()
+all_results = []
+
+with pd.ExcelWriter('output.xlsx', mode='w') as writer:
+    for row_1 in results_auditClient:
+        if row_1[0] is not None:
+            for row_2 in results_License:
+                if row_2[0] is not None:
+                    print(row_2[0])
+                    cursor.execute("SELECT * FROM All_sheets_1 WHERE `Audit Client` = ? AND `License` = ?", (row_1[0], row_2[0]))
+                    results = cursor.fetchall()
+
+                    # Check if results is not None
+                    if results is not None:
+                        column_names = [description[0] for description in cursor.description]
+                        # Convert results to a DataFrame
+                        data = pd.DataFrame(results, columns=column_names)
+
+                        try:
+                            # Write the data DataFrame to an Excel file
+                            data.to_excel(writer, sheet_name=row_1[0], header=list(data.columns), index=False)
+                        except ValueError:
+                            # Handle case when sheet already exists
+                            print(f"Sheet '{row_1[0]}' already exists. Skipping.")
+
+                        all_results.append(data)
+
+                        for row in results:
+                            print(row)
+
+# Concatenate all DataFrames in the list into a single DataFrame
+combined_results = pd.concat(all_results)
+
+# Write the combined_results DataFrame to a separate sheet in the Excel file
+with pd.ExcelWriter('output.xlsx', mode='a', engine='openpyxl') as writer:
+    combined_results.to_excel(writer, sheet_name='Combined Data',index=False)
+
+cursor.close()
+connection.close()
