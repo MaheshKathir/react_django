@@ -108,7 +108,7 @@ pdf_writer.addLink(
     5, # index of the page on which to place the link
     3, # index of the page to which the link should go
     rect=RectangleObject([388.3059997558594, 433.77557373046875, 430.4195556640625, 440.4742431640625]), # clickable area x1, y1, x2, y2 (starts bottom left corner)
-    # border
+    border=[1,1,1]
     # fit 
 )
 
