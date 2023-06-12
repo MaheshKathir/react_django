@@ -1,0 +1,37 @@
+import pdfplumber
+import re
+
+start_account = "Liability for Accrued Benefits"
+end_account = "Total Liability for Accrued Benefits"
+
+pdf_path = 'No Links Clarkville Super Fund - Workpaper 2019.pdf'
+pdf_reader = pdfplumber.open(pdf_path)
+
+matched_values = {}
+
+with pdf_reader as pdf:
+    for page_num, page in enumerate(pdf.pages):
+        lines = page.extract_text().split('\n')
+        for line in lines:
+            if start_account in line:
+                # If start_account is matched, search for end_account in subsequent lines
+                matched_page_number = page_num
+                data_lines = []
+                for subsequent_line in lines[lines.index(line) + 1:]:
+                    values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', subsequent_line)
+                    if values:
+                        data_lines.append(values[0]) 
+                    if end_account in subsequent_line:
+                        # If end_account is found, extract the data from the collected lines
+                        matched_values[start_account] = (data_lines, matched_page_number)
+                        break  # Exit the loop if end_account is found
+                break  # Exit the loop if start_account is found
+
+# Print all matched data and their respective page numbers
+for start, (data, page) in matched_values.items():
+    print("Start Account:", start)
+    print("Matched Data:")
+    for line_data in data:
+        print(line_data)
+    print("Page Number:", page)
+    print()
