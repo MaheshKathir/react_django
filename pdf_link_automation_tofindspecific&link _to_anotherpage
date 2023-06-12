@@ -7,7 +7,12 @@ from os import path
 
 
 pdf_path = 'No Links Clarkville Super Fund - Workpaper 2019.pdf'
-words_to_find = ['Employer', 'Government Co-Contributions']
+words_to_find = ['Employer', 'Government Co-Contributions', 'Interest', 'Other Income',
+'Actuarial Fee','ASIC Fee','Financial Planning Fees','Fund Administration Fee','Investment Expenses',
+'SMSF Supervisory Levy','Receivables']
+# words_to_find = ['Employer', 'Government Co-Contributions', 'Interest', 'Other Income',
+# 'Actuarial Fee','ASIC Fee','Financial Planning Fees','Investment Expenses',
+# 'Insurance Australia Group Limited','Receivables']
 
 matched_values = {}
 
@@ -65,35 +70,39 @@ with pdfplumber.open(pdf_path) as pdf:
                     x, y, x1, y1 = instance
                     print(f'Coordinates: x={x}, y={y}, width={x1-x}, height={y1-y}')
                     # Get the height of the page
-                    page_height = page.rect.height
+                    try:
+                        page_height = page.rect.height
 
                     # Calculate the new y-coordinate for the bottom placement
-                    new_y = page_height - y1
+                   
+                        new_y = page_height - y1
 
                     # Add a link to the new PDF using the updated coordinates
-                    sentence_to_find = 'Transactions: '
-                    to_find = sentence_to_find + word
+                        sentence_to_find = 'Transactions: '
+                        to_find = sentence_to_find + word
 
-                    matched_goto_pagenumber = None
-                    for page_num, page in enumerate(pdf.pages):
-                        lines = page.extract_text().split('\n')
-                        for line in lines:
-                            if to_find in line:
-                                matched_goto_pagenumber = page_num
-                                print(matched_goto_pagenumber)
-                                print(to_find)
-                                break
-                    pdf_writer.addLink(
-                        page_no_to_place_link,
-                        matched_goto_pagenumber,
-                        RectangleObject([x, new_y, x1, new_y + (y1 - y)]),
-                        border = [1, 1, 1]
-                    )
+                        matched_goto_pagenumber = None
+                        for page_num, page in enumerate(pdf.pages):
+                            lines = page.extract_text().split('\n')
+                            for line in lines:
+                                if to_find in line:
+                                    matched_goto_pagenumber = page_num
+                                    print(matched_goto_pagenumber)
+                                    print(to_find)
+                                    break
+                        pdf_writer.addLink(
+                            page_no_to_place_link,
+                            matched_goto_pagenumber,
+                            RectangleObject([x, new_y, x1, new_y + (y1 - y)]),
+                            border = [1, 1, 1]
+                        )
+                    except:
+                        pass
             else:
                 print('Word not found in the PDF.')
 
     # Save the modified PDF
-    output_file = path.abspath('testsample_01_pdf.pdf')
+    output_file = path.abspath('testsample_02_pdf.pdf')
     with open(output_file, 'wb') as link_pdf:
         pdf_writer.write(link_pdf)
 
