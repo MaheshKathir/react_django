@@ -1,3 +1,12 @@
+# list = ['S00588','S01582', 'S01710','S02731','S03562','S02689','S02694','S02472','S03262','S00533','S00062','S00079','S00112','S00116','S01817',
+#         'S03611','S00479','S01081','S01317','S02290','S01679','S00115','S01846','S02366']
+
+# value = 'S01344'
+# if value in list:
+#     print("Welcome")
+# else:
+#     print('you are not  Manager')
+
 import pdfplumber
 import re
 import fitz
@@ -5,7 +14,7 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 from PyPDF2.generic import RectangleObject
 from os import path
 
-pdf_path = 'No Links Clarkville Super Fund - Workpaper 2019.pdf'
+pdf_path = "O'SULLIVAN FAMILY SUPERANNUATION FUND ELECTRONIC WORKPAPER FILE - 2018.pdf"
 words_to_find = ['Employer', 'Government Co-Contributions', 'Interest', 'Other Income',
                  'Actuarial Fee', 'ASIC Fee', 'Financial Planning Fees', 'Fund Administration Fee',
                  'Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee']
@@ -51,9 +60,9 @@ with pdfplumber.open(pdf_path) as pdf:
 
     for word in words_to_find:
         if word in matched_values:
-            print(f"Matching value for '{word}':")
-            print(f"Value: {matched_values[word]['value']}")
-            print(f"Page number: {matched_values[word]['page_number']}")
+            # print(f"Matching value for '{word}':")
+            # print(f"Value: {matched_values[word]['value']}")
+            # print(f"Page number: {matched_values[word]['page_number']}")
             doc = fitz.open(pdf_path)
             page = doc[matched_values[word]['page_number']]
             page_no_to_place_link = matched_values[word]['page_number']
@@ -89,12 +98,25 @@ with pdfplumber.open(pdf_path) as pdf:
                             lines = page.extract_text().split('\n')
                             for line in lines:
                                 if to_find in line:
+                                    print("to_find:", to_find)
+                                    print('total_word_toFind:',total_word_toFind)
                                     # matched_goto_pagenumber = page_num
                                     for subsequent_line in lines[lines.index(line) + 1:]:
                                         if total_word_toFind in subsequent_line:
+                                            print('total_word_toFind:',total_word_toFind)
                                             matched_goto_pagenumber = page_num
                                             print(matched_goto_pagenumber)
                                             break
+                                        else:
+                                            print('total_word_toFind:',total_word_toFind)
+                                            i = 1
+                                            for subsequent_line in lines[lines.index(lines) + i: ]:
+                                                 for line in subsequent_line:
+                                                     if total_word_toFind in line:
+                                                         matched_goto_page = page_num
+                                                         print(matched_goto_page)
+                                                         i+=1
+
                                     # print(matched_goto_pagenumber)
                                     # print(to_find)
                                     break
@@ -207,9 +229,8 @@ with pdfplumber.open(pdf_path) as pdf:
                 print('Word not found in the PDF.')
     
     # Save the modified PDF
-    output_file = path.abspath('testsample_007_pdf.pdf')
+    output_file = path.abspath('testsample_03_pdf.pdf')
     with open(output_file, 'wb') as link_pdf:
         pdf_writer.write(link_pdf)
 
     print(f'Link added to the PDF: {output_file}')
-   
