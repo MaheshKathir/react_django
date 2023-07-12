@@ -272,7 +272,7 @@ if password in list:
                       
                         if len(word_intances) > 0:
                            
-                            x,y, x1,y1 = word_intances[0]
+                            x,y, x1,y1 = word_intances[-2]
                             print(f'coordinates: x={x}, y={y}, width={x1-x}, height= {y1-y}')
                             try:
                                 page_height = matched_client_page_up.rect.height
