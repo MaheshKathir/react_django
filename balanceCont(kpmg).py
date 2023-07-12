@@ -8,9 +8,9 @@ from PyPDF2.generic import RectangleObject
 from os import path
 import os
 
-list = '@#$121!'
-password = input()
-if password == list:
+list = ['!@#$%12345','1111']
+password = input("Password: ")
+if password in list:
     
     path_folder = 'c:\Test_Folder\smsf_link_automation'
 
@@ -69,16 +69,12 @@ if password == list:
 
                 for word in words_to_find:
                     if word in matched_values:
-                        # print(f"Matching value for '{word}':")
-                        # print(f"Value: {matched_values[word]['value']}")
-                        # print(f"Page number: {matched_values[word]['page_number']}")
+                      
                         doc = fitz.open(pdf_path)
                         page = doc[matched_values[word]['page_number']]
                         page_no_to_place_link = matched_values[word]['page_number']
                         print(page)
-                        # print(f"page:{page}")
-                        # Get the text content of the page
-                        # text_content = page.get_text()
+                       
 
                         # Search for a specific word and retrieve its coordinates
                         keyword = matched_values[word]['value']
@@ -129,9 +125,7 @@ if password == list:
                                                     i += 1
                                                 else:
                                                     break
-
-                                                # print(matched_goto_pagenumber)
-                                                # print(to_find)
+                                                
                                                 break
                                     pdf_writer.addLink(
                                         page_no_to_place_link,
@@ -140,7 +134,7 @@ if password == list:
                                         border=[1, 1, 1]
                                     )
 
-                                    # with pdfplumber.open(pdf_path) as pdf:
+                                  
                                     page = pdf.pages[matched_goto_pagenumber]
 
                                     texts = page.extract_text().split('\n')
@@ -152,17 +146,13 @@ if password == list:
                                                 doc = fitz.open(pdf_path)
                                                 matched_page = doc[matched_goto_pagenumber]
 
-                                                # print('-------------',matched_data)
+                                             
                                                 keyword = matched_data
                                                 word_instances = matched_page.search_for(keyword)
                                                 if len(word_instances) > 0:
-                                                    # for instance in word_instances:
-                                                        # print(word_instances[-1])
-                                                        # print('Instance:',instance)
-                                                        # print('Word - Instance:',word_instances)
+                                                  
                                                         x, y, x1, y1 = word_instances[-1]
-                                                        # print(f'Coordinates_11: x={x}, y={y}, width={x1-x}, height={y1-y}')
-
+                                                      
                                                         page_height = matched_page.rect.height
 
                                                         # Calculate the new y-coordinate for the bottom placement
@@ -211,19 +201,10 @@ if password == list:
                                     break
                             break
                     
-                            
-                        
-                # pdf_writer = PdfFileWriter()
-
-                # # Copy the existing pages to the new PDF
-                # for page_num in range(pdf_reader.getNumPages()):
-                #     current_page = pdf_reader.getPage(page_num)
-                #     pdf_writer.addPage(current_page)
                     
                 # Print all matched data and their respective page numbers
                 for start, (data, client_name_page) in matched_client_values.items():
-                    print("Start Account:", start)
-                    print("Matched Data:")
+                    
                     for line_data in data:
                         print(line_data)
                         print("Page Number:", client_name_page)
@@ -285,6 +266,28 @@ if password == list:
                                 except:
                                     pass
                                 
+                        doc = fitz.open(pdf_path)
+                        matched_client_page_up = doc[matched_consolidatedPageNo]        
+                        word_intances = matched_client_page_up.search_for(client_data_no)
+                      
+                        if len(word_intances) > 0:
+                           
+                            x,y, x1,y1 = word_intances[0]
+                            print(f'coordinates: x={x}, y={y}, width={x1-x}, height= {y1-y}')
+                            try:
+                                page_height = matched_client_page_up.rect.height
+                                    
+                                new_y = page_height - y1
+                                    
+                                pdf_writer.addLink(
+                                    matched_consolidatedPageNo,
+                                    client_nameTo_placeLink,
+                                    RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                    border=[1,1,1]
+                                )
+                            except:
+                                pass
+                                
                         else:
                             print('Word not found in the PDF.')
                             
@@ -331,8 +334,7 @@ if password == list:
                                             break
                                     except:
                                        pass
-                                    # print(matched_goto_pagenumber)
-                                    # print(to_find)
+                                  
                                     break
                                         
                                                                     
