@@ -17,9 +17,11 @@ if password in list:
     for root, dirs, files in os.walk(path_folder):
         for pdf_file in files:
             pdf_path = path.join(root, pdf_file)
-            words_to_find = ['Employer', 'Government Co-Contributions', 'Interest', 'Other Income',
+            words_to_find = ['Cash At Bank', 'Foreign At Bank', 'Employer', 'Government Co-Contributions', 'Interest', 'Other Income',
                             'Actuarial Fee', 'ASIC Fee', 'Financial Planning Fees', 'Fund Administration Fee',
-                            'Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee']
+                            'Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee','Rent']
+            
+            bank_list = ['Cash At Bank', 'Foreign At Bank']
 
             start_account = "Liability for Accrued Benefits"
             end_account = "Total Liability for Accrued Benefits"
@@ -41,6 +43,7 @@ if password in list:
                 for word in words_to_find:
                     matched_value = None
                     matched_page_number = None
+                    matched_word = None
                     for page_num, page in enumerate(pdf.pages):
                         lines = page.extract_text().split('\n')
                         for line in lines:
@@ -49,6 +52,7 @@ if password in list:
                                 if values:
                                     matched_value = values[0]  # Extract the first value from the line
                                     matched_page_number = page_num
+                                    matched_word = word
                                     break
                         if matched_value:
                             break
@@ -56,7 +60,8 @@ if password in list:
                     if matched_value:
                         matched_values[word] = {
                             'value': matched_value,
-                            'page_number': matched_page_number
+                            'page_number': matched_page_number,
+                            'word': matched_word
                         }
 
                 # Create a new PDF using PyPDF2
@@ -78,98 +83,135 @@ if password in list:
 
                         # Search for a specific word and retrieve its coordinates
                         keyword = matched_values[word]['value']
+                        matched_word_string = matched_values[word]['word']
+                        if matched_word_string not in bank_list:
                         # print(f"keyword_static:{keyword}")
-                        word_instances = page.search_for(keyword)
-                        if len(word_instances) > 0:
-                            for instance in word_instances:
-                                x, y, x1, y1 = instance
-                                print(f'Coordinates: x={x}, y={y}, width={x1-x}, height={y1-y}')
-                                # Get the height of the page
-                                try:
-                                    page_height = page.rect.height
+                            word_instances = page.search_for(keyword)
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    print(f'Coordinates: x={x}, y={y}, width={x1-x}, height={y1-y}')
+                                    # Get the height of the page
+                                    try:
+                                        page_height = page.rect.height
 
-                                    # Calculate the new y-coordinate for the bottom placement
-                                    new_y = page_height - y1
+                                        # Calculate the new y-coordinate for the bottom placement
+                                        new_y = page_height - y1
 
-                                    # Add a link to the new PDF using the updated coordinates
-                                    sentence_to_find = "Transactions: "
-                                    to_find = sentence_to_find + word
+                                        # Add a link to the new PDF using the updated coordinates
+                                        sentence_to_find = "Transactions: "
+                                        to_find = sentence_to_find + word
 
-                                    second_sentence = 'Total '
-                                    total_word_toFind = second_sentence + word
+                                        second_sentence = 'Total '
+                                        total_word_toFind = second_sentence + word
 
-                                    matched_goto_pagenumber = None
-                                    for page_num, page in enumerate(pdf.pages):
-                                        lines = page.extract_text().split('\n')
-                                        for line in lines:
-                                            if to_find in line:
-                                                print("to_find:", to_find)
-                                                print('total_word_toFind:',total_word_toFind)
-                                                # matched_goto_pagenumber = page_num
-                                                for subsequent_line in lines[lines.index(line) + 1:]:
-                                                    if total_word_toFind in subsequent_line:
-                                                        print('total_word_toFind:',total_word_toFind)
-                                                        matched_goto_pagenumber = page_num
-                                                        print(matched_goto_pagenumber)
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if to_find in line:
+                                                    print("to_find:", to_find)
+                                                    print('total_word_toFind:',total_word_toFind)
+                                                    # matched_goto_pagenumber = page_num
+                                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                                        if total_word_toFind in subsequent_line:
+                                                            print('total_word_toFind:',total_word_toFind)
+                                                            matched_goto_pagenumber = page_num
+                                                            print(matched_goto_pagenumber)
+                                                            break
+                                            if matched_goto_pagenumber is None:
+                                                i = page_num + 1
+                                                for date in enumerate(pdf.pages):
+                                                    next_line = pdf.pages[i].extract_text().split('\n')
+                                                    for end_line in next_line:
+                                                        if total_word_toFind in end_line:
+                                                            matched_goto_pagenumber = i
+                                                            print('valueeee:', matched_goto_pagenumber)
+                                                            break
+                                                    if matched_goto_pagenumber is None:
+                                                        i += 1
+                                                    else:
                                                         break
-                                        if matched_goto_pagenumber is None:
-                                            i = page_num + 1
-                                            for date in enumerate(pdf.pages):
-                                                next_line = pdf.pages[i].extract_text().split('\n')
-                                                for end_line in next_line:
-                                                    if total_word_toFind in end_line:
-                                                        matched_goto_pagenumber = i
-                                                        print('valueeee:', matched_goto_pagenumber)
-                                                        break
-                                                if matched_goto_pagenumber is None:
-                                                    i += 1
-                                                else:
+                                                    
                                                     break
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border=[1, 1, 1]
+                                        )
+
+                                    
+                                        page = pdf.pages[matched_goto_pagenumber]
+
+                                        texts = page.extract_text().split('\n')
+                                        for text in texts:
+                                            if total_word_toFind in text:
+                                                data = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', text)
+                                                if data:
+                                                    matched_data = data[-1]
+                                                    doc = fitz.open(pdf_path)
+                                                    matched_page = doc[matched_goto_pagenumber]
+
                                                 
-                                                break
-                                    pdf_writer.addLink(
-                                        page_no_to_place_link,
-                                        matched_goto_pagenumber,
-                                        RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
-                                        border=[1, 1, 1]
-                                    )
+                                                    keyword = matched_data
+                                                    word_instances = matched_page.search_for(keyword)
+                                                    if len(word_instances) > 0:
+                                                    
+                                                            x, y, x1, y1 = word_instances[-1]
+                                                        
+                                                            page_height = matched_page.rect.height
 
-                                  
-                                    page = pdf.pages[matched_goto_pagenumber]
-
-                                    texts = page.extract_text().split('\n')
-                                    for text in texts:
-                                        if total_word_toFind in text:
-                                            data = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', text)
-                                            if data:
-                                                matched_data = data[-1]
-                                                doc = fitz.open(pdf_path)
-                                                matched_page = doc[matched_goto_pagenumber]
-
-                                             
-                                                keyword = matched_data
-                                                word_instances = matched_page.search_for(keyword)
-                                                if len(word_instances) > 0:
-                                                  
-                                                        x, y, x1, y1 = word_instances[-1]
-                                                      
-                                                        page_height = matched_page.rect.height
-
-                                                        # Calculate the new y-coordinate for the bottom placement
-                                                        new_y = page_height - y1
-                                                        pdf_writer.addLink(
-                                                            matched_goto_pagenumber,
-                                                            page_no_to_place_link,
-                                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
-                                                            border=[1, 1, 1]
-                                                        )
-                                                        print("end")
-                                                        break                           
-                                except:
-                                    pass
+                                                            # Calculate the new y-coordinate for the bottom placement
+                                                            new_y = page_height - y1
+                                                            pdf_writer.addLink(
+                                                                matched_goto_pagenumber,
+                                                                page_no_to_place_link,
+                                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                border=[1, 1, 1]
+                                                            )
+                                                            print("end")
+                                                            break                           
+                                    except:
+                                        pass
                         else:
-                            print('Word not found in the PDF.')
+                            word_instances = page.search_for(keyword)
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    print(f'Coordinates: x={x}, y={y}, width={x1-x}, height={y1-y}')
+                                    # Get the height of the page
+                                    try:
+                                        page_height = page.rect.height
 
+                                        # Calculate the new y-coordinate for the bottom placement
+                                        new_y = page_height - y1
+
+                                        # Add a link to the new PDF using the updated coordinates
+                                        # sentence_to_find = "Transactions: "
+                                        # to_find = sentence_to_find + word
+
+                                        # second_sentence = 'Total '
+                                        # total_word_toFind = second_sentence + word
+
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if investment_summary in line:
+                                                    matched_goto_pagenumber = page_num - 1
+                                                    print(matched_goto_pagenumber)
+                                                    break
+                                            
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border=[1, 1, 1]
+                                        )
+                                            
+                                    except:
+                                        pass
 
                 for page_num, page in enumerate(pdf.pages):
                     lines = page.extract_text().split('\n')
