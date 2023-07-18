@@ -17,9 +17,9 @@ if password in list:
     for root, dirs, files in os.walk(path_folder):
         for pdf_file in files:
             pdf_path = path.join(root, pdf_file)
-            words_to_find = ['Cash At Bank', 'Foreign At Bank', 'Employer', 'Government Co-Contributions', 'Interest', 'Other Income',
-                            'Actuarial Fee', 'ASIC Fee', 'Financial Planning Fees', 'Fund Administration Fee',
-                            'Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee','Rent']
+            words_to_find = ['Cash At Bank', 'Foreign At Bank', 'Employer', 'Government Co-Contributions', 'Interest', 'Other Income','Actuarial Fee', 'ASIC Fee', 
+                             'Financial Planning Fees', 'Fund Administration Fee','Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee',
+                             'Rent','Pensions Paid','Auditor Fee','Bank Fees','Investment Management Fee','Property Expenses','Regulatory Fees']
             
             bank_list = ['Cash At Bank', 'Foreign At Bank']
 
@@ -174,6 +174,7 @@ if password in list:
                                                             break                           
                                     except:
                                         pass
+                                    
                         else:
                             word_instances = page.search_for(keyword)
                             if len(word_instances) > 0:
