@@ -20,7 +20,8 @@ if password in list:
             words_to_find =['Cash At Bank', 'Foreign At Bank', 'Employer', 'Government Co-Contributions', 'Interest', 'Other Income','Actuarial Fee', 'ASIC Fee', 
                              'Financial Planning Fees', 'Fund Administration Fee','Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee',
                              'Rent','Pensions Paid','Auditor Fee','Bank Fees','Investment Management Fee','Property Expenses','Regulatory Fees',
-                             'Benefits Accrued as a Result of Operations before Income Tax','Realised Capital Gains','Current Tax Assets','Income Tax Expense']
+                             'Benefits Accrued as a Result of Operations before Income Tax','Realised Capital Gains','Current Tax Assets','Income Tax Expense',
+                             'Distributions', 'Dividends']
             
             bank_list = ['Cash At Bank', 'Foreign At Bank']
 
@@ -141,10 +142,110 @@ if password in list:
                                         pass
                             
                         elif matched_word_string == 'Distributions':
-                            print('Distributions_2')
+                            word_instances = page.search_for(keyword)
+                            print(keyword)
+                            print(matched_word_string)
+                          
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    try:
+                                        page_height = page.rect.height
+                                        new_y = page_height - y1
+                                        
+                                        value_to_find = 'Distribution Reconciliation Report'
+                                        subsequent_word = 'Net Distributed Capital Gain'
+                                        
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if value_to_find in line:
+                                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                                        if subsequent_word in subsequent_line:
+                                                            matched_goto_pagenumber = page_num
+                                                            break
+                                            if matched_goto_pagenumber is None:
+                                                i = page_num + 1
+                                                for date in enumerate(pdf.pages):
+                                                    next_line = pdf.pages[i].extract_text().split('\n')
+                                                    for end_line in next_line:
+                                                        if value_to_find in end_line:
+                                                            for subsequent_line in next_line[next_line.index(end_line) + 1:]:
+                                                                if subsequent_word in subsequent_line:
+                                                                    matched_goto_pagenumber = i
+                                                                    print('valueeee:', matched_goto_pagenumber)
+                                                                    break
+                                                            if matched_goto_pagenumber is None:
+                                                                i += 1
+                                                            else:
+                                                                break
+                                                            
+                                                            break
+                                            
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border = [1,1,1]
+                                        )
+                                       
+                                        matched_data = keyword
+                                        doc = fitz.open(pdf_path)
+                                        matched_page = doc[matched_goto_pagenumber]
+                                        
+                                        keyword = matched_data 
+                                       
+                                        print('matched_data', keyword)
+                                        word_instances = matched_page.search_for(keyword)
+                                        if len(word_instances) > 0:
+                                            x,y,x1,y1 = word_instances[-1]
+                                            page_height = matched_page.rect.height
+                                            
+                                            new_y = page_height - y1
+                                            pdf_writer.addLink(
+                                                matched_goto_pagenumber,
+                                                page_no_to_place_link,
+                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                border=[1,1,1]
+                                            )
+                                            break
+                                    except:
+                                        pass
                             
                         elif matched_word_string == 'Dividends':
-                            print('Dividends_3')
+                            word_instances = page.search_for(keyword)
+                            print(keyword)
+                            print(matched_word_string)
+                          
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    try:
+                                        page_height = page.rect.height
+                                        new_y = page_height - y1
+                                        
+                                        value_to_find = 'Investment Income Comparison Report'
+                                        
+                                        
+                                        matched_goto_pagenumber = []
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if value_to_find in line:
+                                                    matched_goto_pagenumber.append(page_num)
+                                          
+                                        
+                                        matched_goto_pagenumber =  matched_goto_pagenumber[-1]                 
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border = [1,1,1]
+                                        )
+                                      
+                                    except:
+                                        pass
                             
                         elif matched_word_string == 'Benefits Accrued as a Result of Operations before Income Tax':
                           
