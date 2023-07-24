@@ -17,9 +17,10 @@ if password in list:
     for root, dirs, files in os.walk(path_folder):
         for pdf_file in files:
             pdf_path = path.join(root, pdf_file)
-            words_to_find = ['Cash At Bank', 'Foreign At Bank', 'Employer', 'Government Co-Contributions', 'Interest', 'Other Income','Actuarial Fee', 'ASIC Fee', 
+            words_to_find =['Cash At Bank', 'Foreign At Bank', 'Employer', 'Government Co-Contributions', 'Interest', 'Other Income','Actuarial Fee', 'ASIC Fee', 
                              'Financial Planning Fees', 'Fund Administration Fee','Investment Expenses', 'SMSF Supervisory Levy', 'Receivables' , 'Member', 'Accountancy Fee',
-                             'Rent','Pensions Paid','Auditor Fee','Bank Fees','Investment Management Fee','Property Expenses','Regulatory Fees']
+                             'Rent','Pensions Paid','Auditor Fee','Bank Fees','Investment Management Fee','Property Expenses','Regulatory Fees',
+                             'Benefits Accrued as a Result of Operations before Income Tax','Realised Capital Gains','Current Tax Assets','Income Tax Expense']
             
             bank_list = ['Cash At Bank', 'Foreign At Bank']
 
@@ -79,12 +80,259 @@ if password in list:
                         page = doc[matched_values[word]['page_number']]
                         page_no_to_place_link = matched_values[word]['page_number']
                         print(page)
-                       
+                        
 
                         # Search for a specific word and retrieve its coordinates
                         keyword = matched_values[word]['value']
                         matched_word_string = matched_values[word]['word']
-                        if matched_word_string not in bank_list:
+                        
+                        if matched_word_string == 'Realised Capital Gains':
+                            word_instances = page.search_for(keyword)
+                            print(keyword)
+                            print(matched_word_string)
+                          
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    try:
+                                        page_height = page.rect.height
+                                        new_y = page_height - y1
+                                        
+                                        value_to_find = 'Realised Capital Gains'
+                                        subsequent_word = 'Grand Total'
+                                        
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if value_to_find in line:
+                                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                                        if subsequent_word in subsequent_line:
+                                                            matched_goto_pagenumber = page_num
+                                                            break
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border = [1,1,1]
+                                        )
+                                       
+                                        matched_data = keyword
+                                        doc = fitz.open(pdf_path)
+                                        matched_page = doc[matched_goto_pagenumber]
+                                        
+                                        keyword = matched_data 
+                                       
+                                        print('matched_data', keyword)
+                                        word_instances = matched_page.search_for(keyword)
+                                        if len(word_instances) > 0:
+                                            x,y,x1,y1 = word_instances[-1]
+                                            page_height = matched_page.rect.height
+                                            
+                                            new_y = page_height - y1
+                                            pdf_writer.addLink(
+                                                matched_goto_pagenumber,
+                                                page_no_to_place_link,
+                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                border=[1,1,1]
+                                            )
+                                            break
+                                    except:
+                                        pass
+                            
+                        elif matched_word_string == 'Distributions':
+                            print('Distributions_2')
+                            
+                        elif matched_word_string == 'Dividends':
+                            print('Dividends_3')
+                            
+                        elif matched_word_string == 'Benefits Accrued as a Result of Operations before Income Tax':
+                          
+                            keyword = '(' + keyword + ')'
+                            word_instances = page.search_for(keyword)
+                          
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    try:
+                                        page_height = page.rect.height
+                                        new_y = page_height - y1
+                                        
+                                        value_to_find = 'Tax Accounting Reconciliation'
+                                        subsequent_word = 'Benefits Accrued as a Result of Operations before Income Tax'
+                                        
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if value_to_find in line:
+                                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                                        if subsequent_word in subsequent_line:
+                                                            matched_goto_pagenumber = page_num
+                                                            break
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border = [1,1,1]
+                                        )
+                                        
+                                        page = pdf.pages[matched_goto_pagenumber]
+                                        
+                                        texts = page.extract_text().split('\n')
+                                        for text in texts:
+                                             if subsequent_word in text:
+                                                data = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', text)
+                                              
+                                                if data:
+                                                    matched_data = data[-1]
+                                                    doc = fitz.open(pdf_path)
+                                                    matched_page = doc[matched_goto_pagenumber]
+                                                    
+                                                    keyword = matched_data 
+                                                    keyword = '(' + keyword + ')'
+                                                    print('matched_data', keyword)
+                                                    word_instances = matched_page.search_for(keyword)
+                                                    if len(word_instances) > 0:
+                                                        x,y,x1,y1 = word_instances[-1]
+                                                        page_height = matched_page.rect.height
+                                                        
+                                                        new_y = page_height - y1
+                                                        pdf_writer.addLink(
+                                                            matched_goto_pagenumber,
+                                                            page_no_to_place_link,
+                                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                            border=[1,1,1]
+                                                        )
+                                                        break
+                                    except:
+                                        pass
+                                                
+                                                            
+                            
+                        elif matched_word_string == 'Income Tax Expense':
+                            keyword = '(' + keyword + ')'
+                            word_instances = page.search_for(keyword)
+                          
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    try:
+                                        page_height = page.rect.height
+                                        new_y = page_height - y1
+                                        
+                                        value_to_find = 'Tax Accounting Reconciliation'
+                                        subsequent_word = 'Income Tax Expense'
+                                        
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if value_to_find in line:
+                                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                                        if subsequent_word in subsequent_line:
+                                                            matched_goto_pagenumber = page_num
+                                                            break
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border = [1,1,1]
+                                        )
+                                        
+                                        page = pdf.pages[matched_goto_pagenumber]
+                                        
+                                        texts = page.extract_text().split('\n')
+                                        for text in texts:
+                                             if subsequent_word in text:
+                                                data = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', text)
+                                              
+                                                if data:
+                                                    matched_data = data[-1]
+                                                    doc = fitz.open(pdf_path)
+                                                    matched_page = doc[matched_goto_pagenumber]
+                                                    
+                                                    keyword = matched_data 
+                                                    keyword = '(' + keyword + ')'
+                                                    print('matched_data', keyword)
+                                                    word_instances = matched_page.search_for(keyword)
+                                                    if len(word_instances) > 0:
+                                                        x,y,x1,y1 = word_instances[-1]
+                                                        page_height = matched_page.rect.height
+                                                        
+                                                        new_y = page_height - y1
+                                                        pdf_writer.addLink(
+                                                            matched_goto_pagenumber,
+                                                            page_no_to_place_link,
+                                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                            border=[1,1,1]
+                                                        )
+                                                        break
+                                    except:
+                                        pass
+                            
+                        elif matched_word_string == 'Current Tax Assets':
+                           
+                            word_instances = page.search_for(keyword)
+                          
+                            if len(word_instances) > 0:
+                                for instance in word_instances:
+                                    x, y, x1, y1 = instance
+                                    try:
+                                        page_height = page.rect.height
+                                        new_y = page_height - y1
+                                        
+                                        value_to_find = 'Tax Accounting Reconciliation'
+                                        subsequent_word = 'Income Tax Payable (Receivable)'
+                                        
+                                        matched_goto_pagenumber = None
+                                        for page_num, page in enumerate(pdf.pages):
+                                            lines = page.extract_text().split('\n')
+                                            for line in lines:
+                                                if value_to_find in line:
+                                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                                        if subsequent_word in subsequent_line:
+                                                            matched_goto_pagenumber = page_num
+                                                            break
+                                        pdf_writer.addLink(
+                                            page_no_to_place_link,
+                                            matched_goto_pagenumber,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border = [1,1,1]
+                                        )
+                                        
+                                        page = pdf.pages[matched_goto_pagenumber]
+                                        
+                                        texts = page.extract_text().split('\n')
+                                        for text in texts:
+                                             if subsequent_word in text:
+                                                data = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', text)
+                                              
+                                                if data:
+                                                    matched_data = data[-1]
+                                                    doc = fitz.open(pdf_path)
+                                                    matched_page = doc[matched_goto_pagenumber]
+                                                    
+                                                    keyword = matched_data 
+                                                    keyword = '(' + keyword + ')'
+                                                    print('matched_data', keyword)
+                                                    word_instances = matched_page.search_for(keyword)
+                                                    if len(word_instances) > 0:
+                                                        x,y,x1,y1 = word_instances[-1]
+                                                        page_height = matched_page.rect.height
+                                                        
+                                                        new_y = page_height - y1
+                                                        pdf_writer.addLink(
+                                                            matched_goto_pagenumber,
+                                                            page_no_to_place_link,
+                                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                            border=[1,1,1]
+                                                        )
+                                                        break
+                                    except:
+                                        pass
+                            
+                        elif matched_word_string not in bank_list:
                         # print(f"keyword_static:{keyword}")
                             word_instances = page.search_for(keyword)
                             if len(word_instances) > 0:
@@ -174,8 +422,10 @@ if password in list:
                                                             break                           
                                     except:
                                         pass
+                                    
+
                         
-                        else:
+                        else: 
                             word_instances = page.search_for(keyword)
                             if len(word_instances) > 0:
                                 for instance in word_instances:
@@ -223,7 +473,6 @@ if password in list:
                             data_lines = []
                             for subsequent_line in lines[lines.index(line) + 1:]:
                                 values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', subsequent_line)
-                                print('client_name:', subsequent_line)
                                 if values:
                                     data_lines.append(values[0]) 
                                 if end_account in subsequent_line:
