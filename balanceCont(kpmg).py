@@ -590,7 +590,7 @@ if password in list:
                                 if values_investment:
                                     data_investment.append(values_investment[0])
                                 if end_investment in subsequent_investment_line:
-                                    matched_investment_values[start_investment] = (data_investment[:-1], investments_page_no)
+                                    matched_investment_values[start_investment] = (data_investment, investments_page_no)
                                     break
                             break
                     
