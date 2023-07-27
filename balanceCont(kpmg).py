@@ -190,26 +190,26 @@ if password in list:
                                             border = [1,1,1]
                                         )
                                        
-                                        matched_data = keyword
-                                        doc = fitz.open(pdf_path)
-                                        matched_page = doc[matched_goto_pagenumber]
+                                        # matched_data = keyword
+                                        # doc = fitz.open(pdf_path)
+                                        # matched_page = doc[matched_goto_pagenumber]
                                         
-                                        keyword = matched_data 
+                                        # keyword = matched_data 
                                        
-                                        print('matched_data', keyword)
-                                        word_instances = matched_page.search_for(keyword)
-                                        if len(word_instances) > 0:
-                                            x,y,x1,y1 = word_instances[-1]
-                                            page_height = matched_page.rect.height
+                                        # print('matched_data', keyword)
+                                        # word_instances = matched_page.search_for(keyword)
+                                        # if len(word_instances) > 0:
+                                        #     x,y,x1,y1 = word_instances[-1]
+                                        #     page_height = matched_page.rect.height
                                             
-                                            new_y = page_height - y1
-                                            pdf_writer.addLink(
-                                                matched_goto_pagenumber,
-                                                page_no_to_place_link,
-                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
-                                                border=[1,1,1]
-                                            )
-                                            break
+                                        #     new_y = page_height - y1
+                                        #     pdf_writer.addLink(
+                                        #         matched_goto_pagenumber,
+                                        #         page_no_to_place_link,
+                                        #         RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                        #         border=[1,1,1]
+                                        #     )
+                                        #     break
                                     except:
                                         pass
                             
@@ -746,6 +746,27 @@ if password in list:
                                         RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
                                         border=[1,1,1]    
                                     )
+                                    
+                                    matched_data = investment_data_no
+                                    doc = fitz.open(pdf_path)
+                                    matched_page = doc[matched_investment_pageNo]
+                                    
+                                    keyword = matched_data 
+                                    
+                                    print('matched_data', keyword)
+                                    word_instances = matched_page.search_for(keyword)
+                                    if len(word_instances) > 0:
+                                        x,y,x1,y1 = word_instances[-1]
+                                        page_height = matched_page.rect.height
+                                        
+                                        new_y = page_height - y1
+                                        pdf_writer.addLink(
+                                            matched_investment_pageNo,
+                                            investment_subline_placeLink,
+                                            RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                            border=[1,1,1]
+                                        )
+                                        break
                                 except: 
                                     pass
                         else:
