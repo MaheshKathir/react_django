@@ -1,0 +1,78 @@
+Statement of Financial Position
+
+Investments  
+
+Managed Investments (Australian)                 0.00 
+Shares in Listed Companies (Australian)          2,101,997.80          -> Investment Summary Report -> Market Value (PageNo: 10)
+Units in Listed Unit Trusts (Australian)         71,100.00 0.00
+
+Total Investments
+
+
+Other Assets 
+
+Sundry Debtors                                    0.00 
+ANZ - Premium Cash Account                        0.00
+ANZ - E*trade Cash Investment Account             6,133.04 		-> Praemium -> Cash transactions -> Last AMT
+SMA - Cash Account                                0.00 
+Unsettle Trade                                    240,363.00            -> General Ledger ->Matched Other Assets Name(example Unsettle Trade)
+Dividends Receivable                              12,680.00 		-> General Ledger ->Matched Other Assets Name(example Unsettle Trade)
+CBA Direct Investment Account                     869.87 		-> Praemium -> Cash transactions -> Last AMT                                   
+Distributions Receivable                          1,836.00		-> General Ledger ->Matched Other Assets Name(example Unsettle Trade)
+
+Total Other Assets
+
+Liabilities  - 3
+
+Income Tax Payable                                114,006.70            -> statment of Statement of Taxable Income -> Amount due or refund (nearby)
+PAYG Payable                                      3,834.00              -> General Ledger ->Matched Other Assets Name(example Unsettle Trade)
+
+(BGL Training Fund)
+Deferred Tax Liability                            10,264.09             -> Deferred Tax Reconciliation
+
+Total Liabilities
+
+
+Liability for accrued benefits allocated to members' accounts
+
+Ohanessian, Candace - Accumulation                552,993.97            -> Members Statement -> Candace Ohanessian -> Total Benefits
+Ohanessian, Michael - Accumulation                1,764,145.04          -> ""
+
+Total Liability for accrued benefits allocated to members' accounts
+
+
+
+Operating Statement
+
+Investment Income
+
+Trust Distributions                               5,243.70 		-> Distribution Reconciliation Report -> Total 
+Dividends Received                                62,248.71 		-> Dividend Reconciliation Report -> Total
+Interest Received                                 67.57			-> General Ledger -> Interest Received -> Total Credits
+
+Contribution Income
+
+Employer Contributions                            27,628.93 		-> General Ledger -> Contribution -> Total Credits
+Personal Non Concessional                         651,873.12 		
+Total Income
+
+Expenses
+
+Accountancy Fees                                  1,782.00 		-> General Ledger -> Accountancy Fee -> Total Debits
+ATO Supervisory Levy                              259.00                -> General Ledger -> ATO Supervisory Levy -> Total Debits
+Investment Expenses                               1,090.88		-> General Ledger -> Investment Expenses -> Total Debits
+
+
+Investment Losses
+
+Changes in Market Values                          366,854.40		-> General Ledger -> Changes in Market Values -> Total Debits
+
+Total Expenses 
+
+
+Benefits accrued as a result of 
+operations before income tax                     377,075.75           -> Statement of Taxable Income -> Benefits accrued as a result of operations
+
+Income Tax Expense                               121,675.20           -> Statement of Taxable Income -> CURRENT TAX OR REFUND
+
+Benefits accrued as a result of operations
