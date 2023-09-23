@@ -1,5 +1,6 @@
 # Pypdf FileReader and Writer getting  Deprecated Error means install this  -> pip install 'PyPDF2<3.0'
 # To Resolve the fitz error , need to install this pymupdf                  -> pip install pymupdf
+# for pip                                                                   -> py -m pip
 
 
 #Modules or libraries for this project
@@ -25,22 +26,94 @@ if password in password_list:
             pdf_path = path.join(root, pdf_file)
 
             #Defined Words to search into the PDF file
-            # words_to_find =['Managed Investments','Shares in Listed Companies','Units in Listed Unit Trusts','Sundry Debtors','ANZ - Premium Cash Account',
-            # 'ANZ - E*trade Cash Investment Account','SMA - Cash Account','Unsettle Trade','Dividends Receivable','CBA Direct Investment Account',
-            # 'Distributions Receivable','Income Tax Payable','PAYG Payable','Trust Distributions','Dividends Received','Interest Received','Employer Contributions'
-            # 'Personal Non Concessional','Accountancy Fees','ATO Supervisory Levy','Investment Expenses','Changes in Market Values','Benefits accrued as a result of operations before income tax' 
-            # 'Income Tax Expense']
+            
 
-            words_to_find = ['Unsettle Trade', 'Dividends Receivable', 'Distributions Receivable','PAYG Payable',
-                             'Interest Received','Employer Contributions','Personal Non Concessional','Accountancy Fees','ATO Supervisory Levy',
-                             'Investment Expenses','Changes in Market Values','Benefits accrued as a result of operations before income tax','Income Tax Expense','Dividends Received','Trust Distributions','Income Tax Payable',
-                             'Shares in Listed Companies', 'Units in Listed Unit Trusts', 'Managed Investments', 'ANZ - E*trade Cash Investment Account', 'CBA Direct Investment Account']
+            # words_to_find = ['Unsettle Trade', 'Dividends Receivable', 'Distributions Receivable','PAYG Payable',
+            #                  'Interest Received','Employer Contributions','Personal Non Concessional','Accountancy Fees','ATO Supervisory Levy',
+            #                  'Investment Expenses','Changes in Market Values','Benefits accrued as a result of operations before income tax','Income Tax Expense','Dividends Received','Trust Distributions','Income Tax Payable',
+            #                  'Shares in Listed Companies', 'Units in Listed Unit Trusts', 'Managed Investments', 'ANZ - E*trade Cash Investment Account', 'CBA Direct Investment Account']
+            words_to_find = ['Managed Investments (Australian)','Stapled Securities', 'Other Assets','Derivatives (Options, Hybrids, Future Contracts)']
+            
+            word_to_find = [
 
-            word_based_credits = ['PAYG Payable','Employer Contributions','Interest Received','Employer Contributions','Personal Non Concessional']
+                                'Managed Investments (Australian)',
+                                'Managed Investments (Overseas)',
+                                'Shares in Listed Companies (Australian)',
+                                'Shares in Listed Companies (Overseas)',	
+                                'Shares in Unlisted Private Companies (Overseas)',
+                                'Units in Listed Unit Trusts (Australian)',
+                                'Units in Unlisted Unit Trusts (Australian)',
+                                'Plant and Equipment (at written down value) - Unitised',
+                                'Real Estate Properties ( Australian - Residential)',
+                                'Derivatives (Options, Hybrids, Future Contracts)',
+                                'Other Assets',
+                                'Loans to Associated Entities (In house loans) - Unitised',
+                                'Stapled Securities',
+                                'Mortgage Loans (Australian)',
+                                'Fixed Interest Securities (Australian) - Unitised',
+                                'Shares in Unlisted Private Companies (Australian)',
+
+                                'Sundry Debtors',
+                                'ANZ - Premium Cash Account',
+                                'ANZ - E*trade Cash Investment Account',
+                                'SMA - Cash Account',
+                                'Unsettle Trade',
+                                'Dividends Receivable',
+                                'CBA Direct Investment Account',
+                                'Distributions Receivable',
+                                'Income Tax Refundable',
+                                'Deferred Tax Liability'
+
+                                'Income Tax Payable',
+                                'PAYG Payable',
+                                'Sundry Creditors',
+                                'Amounts owing to other persons',
+
+                                'Trust Distributions',
+                                'Dividends Received',
+                                'Interest Received',
+                                'Other Investment Income',
+                                'Property Income',
+
+                                'Employer Contributions',
+                                'Personal Concessional',
+                                'Personal Non Concessional',
+
+                                'Forex Gain/Loss',
+
+                                'Accountancy Fees',
+                                'ATO Supervisory Levy',
+                                'Investment Expenses',
+                                "Auditor's Remuneration",
+                                'ASIC Fees',
+                                'Forex Exchange Loss',
+                                'Other Expenses',
+                                'Other Expenses - Non deductible',
+                                'Bank Charges',
+                                'Depreciation',
+                                'Interest Paid',
+                                'Property Expenses - Agents Management Fees',
+                                'Property Expenses - Council Rates',
+                                'Property Expenses - Insurance Premium',
+                                'Property Expenses - Repairs Maintenance',
+                                'Property Expenses - Sundry Expenses',
+                                'Property Expenses - Water Rates',
+
+                                'Pensions Paid',
+                                'Benefits Paid/Transfers Out',
+                                'Refund Excess Contributions',
+
+                                'Changes in Market Values',
+
+            ]
+
+
+            word_based_credits = ['PAYG Payable','Employer Contributions','Interest Received','Employer Contributions','Personal Non Concessional',
+                                  'Personal Concessional', 'Other Contributions','Other Investment Income','Property Income','Forex Gain/Loss']
 
             #For matched values has to store as dictionary data structure
             matched_values = {}
-
+            Link_notGenerated = []
             #Open the PDF_file Using PyPDF2
             pdf_reader = PdfFileReader(open(pdf_path, 'rb'))
             
@@ -51,19 +124,21 @@ if password in password_list:
                     matched_page_number = None
                     matched_word = None
                     for page_num, page in enumerate(pdf.pages):
-                        lines = page.extract_text().split('\n')
-                        for line in lines:
-                            if word in line:
-                                data_values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', line)
-                                if data_values:
-                                    if data_values[0] != 0:
-                                        matched_amount = data_values[0]   # Extract the first value from the line
-                                        matched_page_number = page_num
-                                        matched_word = word
-                                        break
-                        if matched_amount:
-                            break
+                        if page_num <= 4:
+                            lines = page.extract_text().split('\n')
+                            for line in lines:
+                                if word in line:
+                                    data_values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', line)
+                                    if data_values:
+                                        if data_values[0] != 0:
+                                            matched_amount = data_values[0]   # Extract the first value from the line
+                                            matched_page_number = page_num
+                                            matched_word = word
+                                            break
+                            if matched_amount:
+                                break
                     if matched_amount:
+                       
                         matched_values[word] = {
                             'value': matched_amount,
                             'page_number': matched_page_number,
@@ -80,7 +155,7 @@ if password in password_list:
 
                 
                 for word in words_to_find:
-                    if  word in matched_values:         
+                    if  word in matched_values and matched_values[word]['value'] != '0.00' :         
                         #To find or find the word and get dimension of the word using fitz module
                         doc = fitz.open(pdf_path)
                         page = doc[matched_values[word]['page_number']]
@@ -90,6 +165,9 @@ if password in password_list:
                         # Search for a specific word and retrieve its coordinates
                         keyword_matched_amount = matched_values[word]['value']
                         matched_word_string = matched_values[word]['word']
+                       
+                       
+                
 
                         if matched_word_string == 'Benefits accrued as a result of operations before income tax':
                             word_instances = page.search_for(keyword_matched_amount)
@@ -149,6 +227,7 @@ if password in password_list:
                                                         )
                                                         break
                                     except:
+                                        Link_notGenerated.append(word)
                                         pass    
 
                         elif matched_word_string == 'Income Tax Expense':
@@ -210,9 +289,10 @@ if password in password_list:
                                                         )
                                                         break
                                     except:
+                                        Link_notGenerated.append(word)
                                         pass    
 
-                        elif matched_word_string == 'Trust Distributions' or 'Dividends Received':
+                        elif matched_word_string == 'Trust Distributions' or matched_word_string == 'Dividends Received':
                                            
                             word_instances = page.search_for(keyword_matched_amount)
 
@@ -275,6 +355,7 @@ if password in password_list:
                                                         )
                                                         break
                                     except:
+                                        Link_notGenerated.append(word)
                                         pass 
                         
                         elif matched_word_string == 'Income Tax Payable':
@@ -335,11 +416,20 @@ if password in password_list:
                                                         )
                                                         break
                                     except:
+                                        Link_notGenerated.append(word)
                                         pass    
                         
-                        elif matched_word_string == 'Shares in Listed Companies' or 'Units in Listed Unit Trusts' or 'Managed Investments':
-                            word_instances = page.search_for(keyword_matched_amount)
+                        elif (matched_word_string == 'Managed Investments (Australian)' or matched_word_string == 'Managed Investments (Overseas)' or
+                              matched_word_string == 'Shares in Listed Companies (Australian)' or matched_word_string == 'Shares in Listed Companies (Overseas)' or	
+                              matched_word_string == 'Shares in Unlisted Private Companies (Overseas)' or matched_word_string == 'Units in Listed Unit Trusts (Australian)' or
+                              matched_word_string == 'Units in Unlisted Unit Trusts (Australian)' or matched_word_string == 'Plant and Equipment (at written down value) - Unitised' or
+                              matched_word_string == 'Real Estate Properties ( Australian - Residential)' or matched_word_string == 'Derivatives (Options, Hybrids, Future Contracts)' or
+                              matched_word_string == 'Other Assets' or matched_word_string == 'Loans to Associated Entities (In house loans) - Unitised' or
+                              matched_word_string == 'Stapled Securities' or matched_word_string == 'Mortgage Loans (Australian)' or matched_word_string == 'Fixed Interest Securities (Australian) - Unitised'):
+                            
 
+                            word_instances = page.search_for(keyword_matched_amount)
+                            
                             if len(word_instances) > 0:
                                 for instance in word_instances:
                                     x, y, x1, y1 = instance
@@ -349,8 +439,11 @@ if password in password_list:
 
                                         value_to_find = 'Investment Summary Report'
                                         subsequent_word = keyword_matched_amount
+                                        
 
                                         matched_goto_pagenumber = None
+                                       
+                                        
                                         for page_num, page in enumerate(pdf.pages):
                                             lines = page.extract_text().split('\n')
                                             for line in lines:
@@ -359,6 +452,27 @@ if password in password_list:
                                                         if subsequent_word in subsequent_line:
                                                             matched_goto_pagenumber = page_num
                                                             break
+                                                        else:
+                                                            find_decimal_value = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', subsequent_line)
+                                                            if find_decimal_value:
+                                                                # print(find_decimal_value)
+                                                                find_decimal_value = [value.replace(',','').strip() for value in find_decimal_value]
+                                                                for exact_decimal_value in find_decimal_value:
+                                                                    print(exact_decimal_value, 'decimal_value')
+                                                                    if exact_decimal_value != 0.00:
+                                                                        subsequent_word = subsequent_word.replace(',','').strip()
+                                                                        round_value = round(float(subsequent_word))
+                                                                        print('rounded_number',round_value)
+                                                                        print(round_value + 1, 'round value + 1')
+                                                                        
+                                                                        if (exact_decimal_value <= round_value + 1 and exact_decimal_value >= round_value - 1):
+                                                                            matched_goto_pagenumber = page_num
+                                                                            print(page_num, 'PageNUmber_investment')
+                                                                            break
+                                                                           
+                                            if matched_goto_pagenumber is not None:
+                                                break
+                                                                    
                                         pdf_writer.addLink(
                                             page_no_to_palce_link,
                                             matched_goto_pagenumber,
@@ -376,28 +490,34 @@ if password in password_list:
                                         #         if data:
 
                                         #             matched_data = data[-1]
-                                        #             doc = fitz.open(pdf_path)
-                                        #             matched_page = doc[matched_goto_pagenumber]
+                                        doc = fitz.open(pdf_path)
+                                        matched_page = doc[matched_goto_pagenumber]
 
-                                        keyword = keyword_matched_amount
+                                        keyword = exact_decimal_value
+                                        print(exact_decimal_value, 'decimal_value')
 
                                         word_instances = matched_page.search_for(keyword)
                                         if len(word_instances) > 0:
-                                            x,y,x1,y1 = word_instances[-1]
+
+                                            x, y, x1, y1 = word_instances[-1]
+
                                             page_height = matched_page.rect.height
 
+                                            # Calculate the new y-coordinate for the bottom placement
                                             new_y = page_height - y1
                                             pdf_writer.addLink(
                                                 matched_goto_pagenumber,
                                                 page_no_to_palce_link,
                                                 RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
-                                                border=[1,1,1]
+                                                border=[1, 1, 1]
                                             )
+                                            exact_decimal_value = None
                                             break
                                     except:
+                                        Link_notGenerated.append(word)
                                         pass    
                         
-                        elif matched_word_string == 'ANZ - E*trade Cash Investment Account' or 'CBA Direct Investment Account':
+                        elif matched_word_string == 'ANZ - E*trade Cash Investment Account' or matched_word_string == 'CBA Direct Investment Account':
                             
                             word_instances = page.search_for(keyword_matched_amount)
 
@@ -456,6 +576,7 @@ if password in password_list:
                                             )
                                             break
                                     except:
+                                        Link_notGenerated.append(word)
                                         pass    
                         
                         else:
@@ -474,7 +595,10 @@ if password in password_list:
                                         #Add a link to the new PDF using the updated coordinates
                                         first_word_Tofind = 'General Ledger'
 
-                                        second_word_Tofind = word
+                                        if (word == 'Employer Contributions' or word == 'Personal Non Concessional' or word == 'Personal Concessional' or word == 'Other Contributions'):
+                                            second_word_Tofind = 'Contributions'
+                                        else:    
+                                            second_word_Tofind = word
 
                                         if word in word_based_credits:
                                             third_word_Tofind = 'Total Credits'
@@ -482,32 +606,34 @@ if password in password_list:
                                             third_word_Tofind = 'Total Debits'
                                         
                                         #To find the above mentioned data from the pdf 
-                                        link_goto_pagenumber = None
+                                        matched_goto_pagenumber = None
                                         for page_num , page in enumerate(pdf.pages):
                                             lines = page.extract_text().split('\n')
                                             for line in lines:
                                                 if first_word_Tofind in line:
                                                     for subsequent_line in lines[lines.index(line) + 1:]:
-                                                        if second_word_Tofind in subsequent_line:
+                                                        if second_word_Tofind in subsequent_line:                                                          
                                                             for second_subsequent_line in lines[lines.index(subsequent_line) + 1:]:
-                                                                if third_word_Tofind in second_subsequent_line:
+                                                                if third_word_Tofind in second_subsequent_line:                                                               
                                                                     matched_goto_pagenumber = page_num
                                                                     break
                                             #this if statement is used for next page to find the third word because it can't find means it goes to next page
-                                            if matched_page_number is None:
+                                            if matched_page_number is not None:
                                                 i = page_num + 1
                                                 for data in enumerate(pdf.pages):
                                                     next_line = pdf.pages[i].extract_text().split('\n')
                                                     for end_line in next_line:
                                                         if third_word_Tofind in end_line:
-                                                            matched_goto_pagenumber = i
-                                                            break
+                                                            for end_line in next_line:
+                                                                if keyword_matched_amount in end_line:
+                                                                    matched_goto_pagenumber = i
+                                                                    break
                                                     if matched_goto_pagenumber is None:
                                                         i += 1
                                                     else:
                                                         break
-
-                                                    break
+                                                break
+                                                    
                                         #to generate top link of the pdf
                                         pdf_writer.addLink(
                                             page_no_to_palce_link, #top page to palce link
@@ -575,9 +701,13 @@ if password in password_list:
                                                             )
                                                             break
 
-                                    except:
+                                    except Exception as e:
+                                        print(F"An error occurred: {str(e)}")
+                                        Link_notGenerated.append(word)
                                         pass           
-
+                                    
+                            # else:
+                            #     Link_notGenerated.append(word)
                 #Below code only for memeber statement - Start
 
                 #variable statement to find the sentence in the pdf from start account to end account variable in between member *amount
@@ -596,22 +726,32 @@ if password in password_list:
                             matched_page_number = []
                             data_lines = []
                             for subsequent_line in lines[lines.index(line) + 1:]:
-                                values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', subsequent_line)
-                                if values:
-                                    data_lines.append(values[0])
-                                    matched_page_number.append(page_num)
+                                # values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))', subsequent_line)
+                                values = re.findall(r' \b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))(?![0-9]{2}/[0-9]{2}/[0-9]{4})(?![0-9]{2}:[0-9]{2}:[0-9]{2})', subsequent_line)
+                               
+                                if values: 
+                                    compare_val = values[0].replace(',', '').strip()
+                                    if float(compare_val) > 300: 
+                                        data_lines.append(values[0])
+                                        matched_page_number.append(page_num)
                                 if end_account in subsequent_line:
                                     #If end_account is found, extract the data from the collected lines
                                     matched_client_values[start_account] = (data_lines[:-1], matched_page_number[:-1])
-                                    print(matched_client_values[start_account])
                                     break #Exit the loop if end_account is found
                                 else:
                                     nextPage = page_num + 1
                                     lines = pdf.pages[nextPage].extract_text().split('\n')
                                     for line in lines:
+                                        # values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))', line)
+                                        values = re.findall(r' \b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))(?![0-9]{2}/[0-9]{2}/[0-9]{4})(?![0-9]{2}:[0-9]{2}:[0-9]{2})', line)
+                                       
+                                        if values:
+                                            compare_val = values[0].replace(',', '').strip() 
+                                            if float(compare_val) > 300:
+                                                data_lines.append(values[0])
+                                                matched_page_number.append(nextPage)
                                         if end_account in line:
                                             matched_client_values[start_account] = (data_lines[:-1], matched_page_number[:-1])
-                                            print('else:',matched_client_values[start_account])
                                             break
                             break #Exit the loop if start_account is found
                         
@@ -621,12 +761,11 @@ if password in password_list:
                 for start, (data, client_name_page) in matched_client_values.items():
                     
                     for line_data, client_pageNo in zip(data, client_name_page):
-                        print(line_data)
-                        print("client_pageNO:",client_pageNo)
+              
                         doc = fitz.open(pdf_path)
                         matched_client_page = doc[client_pageNo]
                         client_nameTo_placeLink = client_pageNo
-
+                      
                         client_data_no = line_data
                         member_statementString = 'Members Statement'
                         matched_memberPageNo = None
@@ -704,15 +843,26 @@ if password in password_list:
                                 print('Word not found in the PDF')
 
                 #End memeber statement 
-
+                # Link_notGenerated.pop(-2)
+                print(Link_notGenerated)
+                
                 # save the modified PDF
                 filename = os.path.splitext(pdf_file)[0] #Extract the filename without extension
                 output_file = path.join(path_folder, f'Automated_link_{filename}.pdf')
-                with open(output_file, 'wb') as link_pdf:
-                    pdf_writer.write(link_pdf)
-                print(f'Link added to the PDF: {output_file}')                           
-                                                
 
+                # output_file_error_log = path.join(path_folder, f'Error_log_File_{filename}.txt')
+                # with open(output_file_error_log, 'w') as file:
+                #     file.write("_______________ Failing to generate link for this below Word's _______________"+'\n')
+                #     file.write('\n')
+                #     for item in Link_notGenerated:
+                #         file.write(item + '\n')
+                #         file.write('\n')
+                # print(f'Data has been written to {output_file_error_log}')
+
+                # with open(output_file, 'wb') as link_pdf:
+                #     pdf_writer.write(link_pdf)
+                # print(f'Link added to the PDF: {output_file}')                           
+                                                
 
 else:
     print('Password is Incorrect!')
