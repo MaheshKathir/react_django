@@ -140,11 +140,11 @@ if password in password_list:
                                     # data_values = re.findall(r'\((\d{1,3}(?:,\d{3})*(?:\.\d+)?)\)', line)
                                     # print(data_values)
                                     data_values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', line)
-                                    print(data_values)
+                                 
                                     if data_values:
                                         if data_values[0] != 0:
                                             matched_amount = data_values[0]   # Extract the first value from the line
-                                            print(word,matched_amount)
+                                          
                                             matched_page_number = page_num
                                             matched_word = word
                                             break 
@@ -240,8 +240,7 @@ if password in password_list:
                                                         )
                                                         break
                                     except Exception as e:
-                                        print('word:' , matched_word_string)
-                                        print(F"An error occurred: {str(e)}")
+                                      
                                         Link_notGenerated.append(word)
                                         pass    
 
@@ -304,8 +303,7 @@ if password in password_list:
                                                         )
                                                         break
                                     except Exception as e:
-                                        print('word:' , matched_word_string)
-                                        print(F"An error occurred: {str(e)}")
+                                       
                                         Link_notGenerated.append(word)
                                         pass    
 
@@ -433,8 +431,7 @@ if password in password_list:
                                                         )
                                                         break
                                     except Exception as e:
-                                        print('word:' , matched_word_string)
-                                        print(F"An error occurred: {str(e)}")
+                                  
                                         Link_notGenerated.append(word)
                                         pass    
                         
@@ -467,11 +464,11 @@ if password in password_list:
                                         for page_num, page in enumerate(pdf.pages):
                                             lines = page.extract_text().split('\n')
                                             for line in lines:
-                                                if value_to_find in line:
+                                                if value_to_find in line: #1 value_to_find
                                                     for subsequent_line in lines[lines.index(line) + 1:]:
-                                                        if second_word_Tofind in subsequent_line:
+                                                        if second_word_Tofind in subsequent_line: #2 second_word_Tofind
                                                             for second_subsequent_line in lines[lines.index(subsequent_line) + 1:]:
-                                                                if subsequent_word in second_subsequent_line:
+                                                                if subsequent_word in second_subsequent_line: #3 subsequent_word
                                                                     matched_goto_pagenumber = page_num
                                                                     break
                                                                 elif matched_goto_pagenumber is None:
@@ -519,7 +516,7 @@ if password in password_list:
                                         matched_page = doc[matched_goto_pagenumber]
 
                                         keyword = keyword_matched_amount
-                                        print(keyword_matched_amount)
+                                    
                              
                                         word_instances = matched_page.search_for(keyword)
                                         if len(word_instances) > 0:
@@ -539,8 +536,7 @@ if password in password_list:
                                             tentative_matched_amount = None
                                             break
                                     except Exception as e:
-                                        print('word:' , matched_word_string)
-                                        print(F"An error occurred: {str(e)}")
+                                      
                                         Link_notGenerated.append(word)
                                         pass    
                         
@@ -603,8 +599,7 @@ if password in password_list:
                                             )
                                             break
                                     except Exception as e:
-                                        print('word:' , matched_word_string)
-                                        print(F"An error occurred: {str(e)}")
+                                   
                                         Link_notGenerated.append(word)
                                         pass    
                         
@@ -731,7 +726,7 @@ if password in password_list:
                                                             break
 
                                     except Exception as e:
-                                        print(F"An error occurred: {str(e)}")
+                                     
                                         Link_notGenerated.append(word)
                                         pass           
                                     
@@ -807,6 +802,23 @@ if password in password_list:
                                         if line_data in member_subsequent_line:
                                             matched_memberPageNo = page_num
                                             break
+                                        elif matched_memberPageNo is None:
+                                            find_decimal_value = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', member_subsequent_line)
+                                            if find_decimal_value:
+                                                find_decimal_value = [value.replace(',', '').strip() for value in find_decimal_value]
+                                                for exact_decimal_value in find_decimal_value:
+                                                    if exact_decimal_value != 0.00:
+                                                        convert_ToInt_subsequent_word = line_data.replace(',', '').strip()
+                                                        round_value = round(float(convert_ToInt_subsequent_word))
+                                                        decimal_value = float(exact_decimal_value)
+
+                                                        if (decimal_value <= round_value + 1 and decimal_value >= round_value - 1):
+                                                            matched_memberPageNo = page_num
+                                                            client_data_no_decimal = f"{decimal_value:,.2f}"
+                                                           
+                                                            break
+                                                        
+
                             if matched_memberPageNo is None:
                                 i = page_num + 1
                                 for date in enumerate(pdf.pages):
@@ -818,6 +830,22 @@ if password in password_list:
                                                     if line_data in subsequent_line:
                                                         matched_memberPageNo = i
                                                         break
+                                                    elif matched_memberPageNo is None:
+                                                        find_decimal_value = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', member_subsequent_line)
+                                                        if find_decimal_value:
+                                                            find_decimal_value = [value.replace(',', '').strip() for value in find_decimal_value]
+                                                            for exact_decimal_value in find_decimal_value:
+                                                                if exact_decimal_value != 0.00:
+                                                                    convert_ToInt_subsequent_word = line_data.replace(',', '').strip()
+                                                                    round_value = round(float(convert_ToInt_subsequent_word))
+                                                                    decimal_value = float(exact_decimal_value)
+
+                                                                    if (decimal_value <= round_value + 1 and decimal_value >= round_value - 1):
+                                                                        matched_memberPageNo = page_num
+                                                                        client_data_no_decimal = f"{decimal_value:,.2f}"
+
+                                                                        break
+
                                         if matched_memberPageNo is None:
                                             i += 1
                                         else:
@@ -828,6 +856,7 @@ if password in password_list:
                                     break
 
                         word_instance = matched_client_page.search_for(client_data_no)
+               
                         if len(word_instance) > 0:
                             for instance in word_instance:
                                 x,y, x1,y1 = instance
@@ -843,15 +872,21 @@ if password in password_list:
                                         border=[1,1,1]
                                     )
                                 except Exception as e:
-                                    print('word:' , matched_word_string)
-                                    print(F"An error occurred: {str(e)}")
+                                 
                                     pass
                         
                         #This for below matched amount to set bottom to top link in the pdf
                         doc = fitz.open(pdf_path)
                         if matched_memberPageNo is not None:
+                          
                             matched_client_page_up = doc[matched_memberPageNo]
                             word_instance = matched_client_page_up.search_for(client_data_no)
+                            if not word_instance:
+                                client_data_no_decimal = client_data_no_decimal.replace(',', '').strip()
+                                convert_to_int = int(client_data_no_decimal)
+                                client_data_no = f"{convert_to_int:,.2f}"
+                                
+                                word_instance = matched_client_page_up.search_for(client_data_no)
 
                             if len(word_instance) > 0:
                                 
@@ -868,8 +903,7 @@ if password in password_list:
                                         border=[1,1,1]
                                     )
                                 except Exception as e:
-                                    print('word:' , matched_word_string)
-                                    print(F"An error occurred: {str(e)}")
+                                   
                                     pass
 
                             else:
@@ -877,7 +911,7 @@ if password in password_list:
 
                 #End memeber statement 
                 # Link_notGenerated.pop(-2)
-                print(Link_notGenerated)
+                # print(Link_notGenerated)
                 
                 # save the modified PDF
                 filename = os.path.splitext(pdf_file)[0] #Extract the filename without extension
