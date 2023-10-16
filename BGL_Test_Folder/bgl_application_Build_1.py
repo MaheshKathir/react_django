@@ -24,7 +24,9 @@ def pdf_automation():
 
     if password in password_list: 
 
-        path_folder = 'C:\BGL_Test_Folder'
+        # path_folder = 'C:\BGL_Test_Folder'
+        path_folder = input('Input your "PDF" file path:     ')
+        out_path_folder = input('Input your "PDF" automated output path:')
 
         for root, dirs, files in os.walk(path_folder):
             for pdf_file in files:
@@ -643,9 +645,11 @@ def pdf_automation():
                                                         for subsequent_line in lines[lines.index(line) + 1:]:
                                                             if second_word_Tofind in subsequent_line:                                                          
                                                                 for second_subsequent_line in lines[lines.index(subsequent_line) + 1:]:
-                                                                    if third_word_Tofind in second_subsequent_line:                                                               
-                                                                        matched_goto_pagenumber = page_num
-                                                                        break
+                                                                    if third_word_Tofind in second_subsequent_line:
+                                                                        for end_line in lines[lines.index(subsequent_line) + 1:]:   
+                                                                            if keyword_matched_amount in end_line:                                                           
+                                                                                matched_goto_pagenumber = page_num
+                                                                                break
                                                 #this if statement is used for next page to find the third word because it can't find means it goes to next page
                                                 if matched_page_number is not None:
                                                     i = page_num + 1
@@ -704,6 +708,8 @@ def pdf_automation():
                                                                     border=[1, 1, 1]
                                                                 )
                                                                 break
+
+                                                       
                                                         #else if for the amount is not equal means it place the link in last index of matched amount 
                                                         else:
                                                         
@@ -846,7 +852,7 @@ def pdf_automation():
                                                                         decimal_value = float(exact_decimal_value)
 
                                                                         if (decimal_value <= round_value + 1 and decimal_value >= round_value - 1):
-                                                                            matched_memberPageNo = page_num
+                                                                            matched_memberPageNo = i
                                                                             client_data_no_decimal = f"{decimal_value:,.2f}"
 
                                                                             break
@@ -889,11 +895,11 @@ def pdf_automation():
                                 if not word_instance:
                                     client_data_no_decimal = client_data_no_decimal.replace(',', '').strip()
                                     convert_to_int = int(float(client_data_no_decimal))
-                                    print(convert_to_int)
+                                  
                                     client_data_no = f"{convert_to_int:,}"
-                                    print(client_data_no)
+                                  
                                 word_instance = matched_client_page_up.search_for(client_data_no)
-                                print(word_instance)
+                               
                                 if len(word_instance) > 0:
                                     
                                     try:
@@ -921,7 +927,7 @@ def pdf_automation():
                     
                     # save the modified PDF
                     filename = os.path.splitext(pdf_file)[0] #Extract the filename without extension
-                    output_file = path.join(path_folder, f'Automated_link_{filename}.pdf')
+                    output_file = path.join(out_path_folder, f'Automated_link_{filename}.pdf')
 
                     # output_file_error_log = path.join(path_folder, f'Error_log_File_{filename}.txt')
                     # with open(output_file_error_log, 'w') as file:
