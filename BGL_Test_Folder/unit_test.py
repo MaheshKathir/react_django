@@ -24,8 +24,9 @@ def pdf_automation():
 
     if password in password_list: 
 
-        path_folder = 'C:/unit_test'
-        # path_folder =  input("Input path location: ")
+        # path_folder = 'C:\BGL_Test_Folder'
+        path_folder = input('Input your "PDF" file path:     ')
+        out_path_folder = input('Input your "PDF" automated output path:')
 
         for root, dirs, files in os.walk(path_folder):
             for pdf_file in files:
@@ -38,8 +39,8 @@ def pdf_automation():
                 #                  'Interest Received','Employer Contributions','Personal Non Concessional','Accountancy Fees','ATO Supervisory Levy',
                 #                  'Investment Expenses','Changes in Market Values','Benefits accrued as a result of operations before income tax','Income Tax Expense','Dividends Received','Trust Distributions','Income Tax Payable',
                 #                  'Shares in Listed Companies', 'Units in Listed Unit Trusts', 'Managed Investments', 'ANZ - E*trade Cash Investment Account', 'CBA Direct Investment Account']
+                # words_to_find = ['Benefits accrued as a result of operations before income tax', 'Income Tax Expense','Changes in Market Values']
                 words_to_find = ['Unsettled Trades']
-                
                 # words_to_find = [
 
                 #                     'Managed Investments (Australian)',
@@ -640,32 +641,33 @@ def pdf_automation():
                                             for page_num , page in enumerate(pdf.pages):
                                                 lines = page.extract_text().split('\n')
                                                 for line in lines:
-                                                    if first_word_Tofind in line: #1
+                                                    if first_word_Tofind in line:
                                                         for subsequent_line in lines[lines.index(line) + 1:]:
-                                                            if second_word_Tofind in subsequent_line: #2                                                        
+                                                            if second_word_Tofind in subsequent_line:                                                          
                                                                 for second_subsequent_line in lines[lines.index(subsequent_line) + 1:]:
-                                                                    if third_word_Tofind in second_subsequent_line: #3                                                             
-                                                                        matched_goto_pagenumber = page_num
-                                                                        break   
-
-                                                #this if statement is used for next page to find the third word because it can't find means it goes to next page
-                                                if matched_page_number is not None:
-                                                    i = page_num + 1
-                                                    for data in enumerate(pdf.pages):
-                                                        next_line = pdf.pages[i].extract_text().split('\n')
-                                                        for end_line in next_line:
-                                                            if third_word_Tofind in end_line:
-                                                                for end_line in next_line:
-                                                                    if keyword_matched_amount in end_line:
-                                                                        matched_goto_pagenumber = i
+                                                                    if third_word_Tofind in second_subsequent_line:
+                                                                        # for end_line in lines[lines.index(subsequent_line) + 1:]:   
+                                                                        #     if keyword_matched_amount in end_line:                                                           
+                                                                                matched_goto_pagenumber = page_num
+                                                                                break
+                                                                    #this if statement is used for next page to find the third word because it can't find means it goes to next page
+                                                                    if matched_page_number is not None:
+                                                                        i = page_num + 1
+                                                                        for data in enumerate(pdf.pages):
+                                                                            next_line = pdf.pages[i].extract_text().split('\n')
+                                                                            for end_line in next_line:
+                                                                                if third_word_Tofind in end_line:
+                                                                                    for end_line in next_line:
+                                                                                        # if keyword_matched_amount in end_line:
+                                                                                        matched_goto_pagenumber = i
+                                                                                        break
+                                                                            if matched_goto_pagenumber is None:
+                                                                                i += 1
+                                                                            else:
+                                                                                break
                                                                         break
-                                                        if matched_goto_pagenumber is None:
-                                                            i += 1
-                                                        else:
-                                                            break
-                                                    break
                                                         
-                                            #to generate top link of the pdf
+                                            #To generate top link of the pdf
                                             pdf_writer.addLink(
                                                 page_no_to_palce_link, #top page to palce link
                                                 matched_goto_pagenumber, #Bottom page to place link
@@ -706,6 +708,8 @@ def pdf_automation():
                                                                     border=[1, 1, 1]
                                                                 )
                                                                 break
+
+                                                       
                                                         #else if for the amount is not equal means it place the link in last index of matched amount 
                                                         else:
                                                         
@@ -718,28 +722,28 @@ def pdf_automation():
                                                             word_instances = matched_page.search_for(keyword)
 
                                                             if not word_instances:
-                                                                for date in enumerate(pdf.pages):
-                                                                    try:
-                                                                        lines = pdf.pages[matched_goto_pagenumber].extract_text().split('\n')
-                                                                        for line in lines:
-                                                                            find_decimal_value = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', line)
-                                                                            if find_decimal_value:
-                                                                                find_decimal_value = [value.replace(',', '').strip() for value in find_decimal_value]
-                                                                                for exact_decimal_value in find_decimal_value:
-                                                                                    if exact_decimal_value != 0.00:
-                                                                                        convert_ToInt_subsequent_word = keyword_matched_amount.replace(',','').strip()
-                                                                                        round_value = round(float(convert_ToInt_subsequent_word))
-                                                                                        decimal_value = float(exact_decimal_value)
+                                                                # for date in enumerate(pdf.pages):
+                                                                try:
+                                                                    lines = pdf.pages[matched_goto_pagenumber].extract_text().split('\n')
+                                                                    for line in lines:
+                                                                        find_decimal_value = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', line)
+                                                                        if find_decimal_value:
+                                                                            find_decimal_value = [value.replace(',', '').strip() for value in find_decimal_value]
+                                                                            for exact_decimal_value in find_decimal_value:
+                                                                                if exact_decimal_value != 0.00:
+                                                                                    convert_ToInt_subsequent_word = keyword_matched_amount.replace(',','').strip()
+                                                                                    round_value = round(float(convert_ToInt_subsequent_word))
+                                                                                    decimal_value = float(exact_decimal_value)
 
-                                                                                        if (decimal_value <= round_value +1 and decimal_value >= round_value -1):
-                                                                                            keyword = f"{decimal_value:,.2f}"
+                                                                                    if (decimal_value <= round_value +1 and decimal_value >= round_value -1):
+                                                                                        keyword = f"{decimal_value:,.2f}"
+                                                                                        print(keyword, 'general Ledger')
+                                                                                        word_instances = matched_page.search_for(keyword)
 
-                                                                                            word_instances = matched_page.search_for(keyword)
-
-                                                                                            break
-                                                                    except:
+                                                                                        break
+                                                                except:
                                                                        pass
-                                                             
+
                                                             if len(word_instances) > 0:
 
                                                                 x, y, x1, y1 = word_instances[-1]
@@ -763,7 +767,6 @@ def pdf_automation():
                                         
                                 # else:
                                 #     Link_notGenerated.append(word)
-                           
                     #Below code only for memeber statement - Start
 
                     #variable statement to find the sentence in the pdf from start account to end account variable in between member *amount
@@ -873,7 +876,7 @@ def pdf_automation():
                                                                         decimal_value = float(exact_decimal_value)
 
                                                                         if (decimal_value <= round_value + 1 and decimal_value >= round_value - 1):
-                                                                            matched_memberPageNo = page_num
+                                                                            matched_memberPageNo = i
                                                                             client_data_no_decimal = f"{decimal_value:,.2f}"
 
                                                                             break
@@ -916,11 +919,11 @@ def pdf_automation():
                                 if not word_instance:
                                     client_data_no_decimal = client_data_no_decimal.replace(',', '').strip()
                                     convert_to_int = int(float(client_data_no_decimal))
-                                    print(convert_to_int)
+                                  
                                     client_data_no = f"{convert_to_int:,}"
-                                    print(client_data_no)
+                                  
                                 word_instance = matched_client_page_up.search_for(client_data_no)
-                                print(word_instance)
+                               
                                 if len(word_instance) > 0:
                                     
                                     try:
@@ -931,7 +934,7 @@ def pdf_automation():
 
                                         pdf_writer.addLink(
                                             matched_memberPageNo,
-                                            client_nameTo_placeLink, 
+                                            client_nameTo_placeLink,
                                             RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
                                             border=[1,1,1]
                                         )
@@ -948,7 +951,7 @@ def pdf_automation():
                     
                     # save the modified PDF
                     filename = os.path.splitext(pdf_file)[0] #Extract the filename without extension
-                    output_file = path.join(path_folder, f'Automated_link_{filename}.pdf')
+                    output_file = path.join(out_path_folder, f'Automated_link_{filename}.pdf')
 
                     # output_file_error_log = path.join(path_folder, f'Error_log_File_{filename}.txt')
                     # with open(output_file_error_log, 'w') as file:
@@ -959,9 +962,9 @@ def pdf_automation():
                     #         file.write('\n')
                     # print(f'Data has been written to {output_file_error_log}')
 
-                    # with open(output_file, 'wb') as link_pdf:
-                    #     pdf_writer.write(link_pdf)
-                    # print(f'Link added to the PDF: {output_file}')                           
+                    with open(output_file, 'wb') as link_pdf:
+                        pdf_writer.write(link_pdf)
+                    print(f'Link added to the PDF: {output_file}')                           
                                                     
 
     else:
