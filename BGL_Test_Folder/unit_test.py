@@ -19,14 +19,15 @@ import pwinput
 
 def pdf_automation():
     #For password functionality
-    password_list  = ['!@#$%12345','1111']
-    password = pwinput.pwinput(prompt='Password: ', mask='*')
+    password_list  = ['!@#$%12345','1111','sbsl@123']
+    password = pwinput.pwinput(prompt='Password                               : ', mask='*')
 
     if password in password_list: 
 
         # path_folder = 'C:\BGL_Test_Folder'
-        path_folder = input('Input your "PDF" file path:     ')
-        out_path_folder = input('Input your "PDF" automated output path:')
+                              
+        path_folder = input('Enter the path of your "PDF" file      : ')
+        out_path_folder = input('Enter the output path to save the "PDF": ')
 
         for root, dirs, files in os.walk(path_folder):
             for pdf_file in files:
@@ -40,87 +41,87 @@ def pdf_automation():
                 #                  'Investment Expenses','Changes in Market Values','Benefits accrued as a result of operations before income tax','Income Tax Expense','Dividends Received','Trust Distributions','Income Tax Payable',
                 #                  'Shares in Listed Companies', 'Units in Listed Unit Trusts', 'Managed Investments', 'ANZ - E*trade Cash Investment Account', 'CBA Direct Investment Account']
                 # words_to_find = ['Benefits accrued as a result of operations before income tax', 'Income Tax Expense','Changes in Market Values']
-                words_to_find = ['Unsettled Trades']
-                # words_to_find = [
+                # words_to_find = ['Income Tax Payable']
+                words_to_find = [
 
-                #                     'Managed Investments (Australian)',
-                #                     'Managed Investments (Overseas)',
-                #                     'Shares in Listed Companies (Australian)',
-                #                     'Shares in Listed Companies (Overseas)',	
-                #                     'Shares in Unlisted Private Companies (Overseas)',
-                #                     'Units in Listed Unit Trusts (Australian)',
-                #                     'Units in Unlisted Unit Trusts (Australian)',
-                #                     'Plant and Equipment (at written down value) - Unitised',
-                #                     'Real Estate Properties ( Australian - Residential)',
-                #                     'Derivatives (Options, Hybrids, Future Contracts)',
-                #                     'Other Assets',
-                #                     'Loans to Associated Entities (In house loans) - Unitised',
-                #                     'Stapled Securities',
-                #                     'Mortgage Loans (Australian)',
-                #                     'Fixed Interest Securities (Australian) - Unitised',
-                #                     'Shares in Unlisted Private Companies (Australian)',
-                #                     'Units in Listed Trusts (Australian)',
+                                    'Managed Investments (Australian)',
+                                    'Managed Investments (Overseas)',
+                                    'Shares in Listed Companies (Australian)',
+                                    'Shares in Listed Companies (Overseas)',	
+                                    'Shares in Unlisted Private Companies (Overseas)',
+                                    'Units in Listed Unit Trusts (Australian)',
+                                    'Units in Unlisted Unit Trusts (Australian)',
+                                    'Plant and Equipment (at written down value) - Unitised',
+                                    'Real Estate Properties ( Australian - Residential)',
+                                    'Derivatives (Options, Hybrids, Future Contracts)',
+                                    'Other Assets',
+                                    'Loans to Associated Entities (In house loans) - Unitised',
+                                    'Stapled Securities',
+                                    'Mortgage Loans (Australian)',
+                                    'Fixed Interest Securities (Australian) - Unitised',
+                                    'Shares in Unlisted Private Companies (Australian)',
+                                    'Units in Listed Trusts (Australian)',
                                 
-                #                     'Sundry Debtors',
-                #                     'ANZ - Premium Cash Account',
-                #                     'ANZ - E*trade Cash Investment Account',
-                #                     'SMA - Cash Account',
-                #                     'Unsettle Trade',
-                #                     'Dividends Receivable',
-                #                     'CBA Direct Investment Account',
-                #                     'Distributions Receivable',
-                #                     'Income Tax Refundable',
-                #                     'Deferred Tax Liability'
+                                    'Sundry Debtors',
+                                    'ANZ - Premium Cash Account',
+                                    'ANZ - E*trade Cash Investment Account',
+                                    'SMA - Cash Account',
+                                    'Unsettle Trade',
+                                    'Dividends Receivable',
+                                    'CBA Direct Investment Account',
+                                    'Distributions Receivable',
+                                    'Income Tax Refundable',
+                                    'Deferred Tax Liability',
 
-                #                     'Income Tax Payable',
-                #                     'PAYG Payable',
-                #                     'Sundry Creditors',
-                #                     'Amounts owing to other persons',
+                                    'Income Tax Payable',
+                                    'PAYG Payable',
+                                    'Sundry Creditors',
+                                    'Amounts owing to other persons',
 
-                #                     'Trust Distributions',
-                #                     'Dividends Received',
-                #                     'Interest Received',
-                #                     'Other Investment Income',
-                #                     'Property Income',
+                                    'Trust Distributions',
+                                    'Dividends Received',
+                                    'Interest Received',
+                                    'Other Investment Income',
+                                    'Property Income',
 
-                #                     'Employer Contributions',
-                #                     'Personal Concessional',
-                #                     'Personal Non Concessional',
+                                    'Employer Contributions',
+                                    'Personal Concessional',
+                                    'Personal Non Concessional',
 
-                #                     'Forex Gain/Loss',
-                #                     'Life Insurance Premiums',
+                                    'Forex Gain/Loss',
+                                    'Life Insurance Premiums',
 
-                #                     'Accountancy Fees',
-                #                     'ATO Supervisory Levy',
-                #                     'Investment Expenses',
-                #                     "Auditor's Remuneration",
-                #                     'ASIC Fees',
-                #                     'Forex Exchange Loss',
-                #                     'Other Expenses',
-                #                     'Other Expenses - Non deductible',
-                #                     'Bank Charges',
-                #                     'Depreciation',
-                #                     'Interest Paid',
-                #                     'Property Expenses - Agents Management Fees',
-                #                     'Property Expenses - Council Rates',
-                #                     'Property Expenses - Insurance Premium',
-                #                     'Property Expenses - Repairs Maintenance',
-                #                     'Property Expenses - Sundry Expenses',
-                #                     'Property Expenses - Water Rates',
-                #                     'Administration Costs',
-                #                     'Investment Expenses',
-                #                     'Unsettled Trades',
+                                    'Accountancy Fees',
+                                    'ATO Supervisory Levy',
+                                    'Investment Expenses',
+                                    "Auditor's Remuneration",
+                                    'ASIC Fees',
+                                    'Forex Exchange Loss',
+                                    'Other Expenses',
+                                    'Other Expenses - Non deductible',
+                                    'Bank Charges',
+                                    'Depreciation',
+                                    'Interest Paid',
+                                    'Property Expenses - Agents Management Fees',
+                                    'Property Expenses - Council Rates',
+                                    'Property Expenses - Insurance Premium',
+                                    'Property Expenses - Repairs Maintenance',
+                                    'Property Expenses - Sundry Expenses',
+                                    'Property Expenses - Water Rates',
+                                    'Administration Costs',
+                                    'Investment Expenses',
+                                    'Unsettled Trades',
 
-                #                     'Benefits accrued as a result of operations before income tax',
-                #                     'Income Tax Expense',
+                                    'Benefits accrued as a result of operations before income tax',
+                                    'Income Tax Expense',
 
-                #                     'Pensions Paid',
-                #                     'Benefits Paid/Transfers Out',
-                #                     'Refund Excess Contributions',
+                                    'Pensions Paid',
+                                    'Benefits Paid/Transfers Out',
+                                    'Refund Excess Contributions',
 
-                #                     'Changes in Market Values',
+                                    'Changes in Market Values'
 
-                # ]
+                ]
 
 
                 word_based_credits = ['PAYG Payable','Employer Contributions','Interest Received','Employer Contributions','Personal Non Concessional',
@@ -139,7 +140,7 @@ def pdf_automation():
                         matched_page_number = None
                         matched_word = None
                         for page_num, page in enumerate(pdf.pages):
-                            if page_num <= 3:
+                            if page_num <= 4:
                                 lines = page.extract_text().split('\n')
                                 for line in lines:
                                     
@@ -149,11 +150,13 @@ def pdf_automation():
                                         data_values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', line)
                                     
                                         if data_values:
-                                            if data_values[0] != 0:
+                                           if data_values[0] != '0' and data_values[0] != '0.00':
+
                                                 matched_amount = data_values[0]   # Extract the first value from the line
-                                            
+                                              
                                                 matched_page_number = page_num
                                                 matched_word = word
+                                              
                                                 break 
                                 if matched_amount:
                                     break
@@ -175,7 +178,7 @@ def pdf_automation():
 
                     
                     for word in words_to_find:
-                        if  word in matched_values and matched_values[word]['value'] != '0.00' :         
+                        if  word in matched_values and matched_values[word]['value'] != '0.00':         
                             #To find or find the word and get dimension of the word using fitz module
                             doc = fitz.open(pdf_path)
                             page = doc[matched_values[word]['page_number']]
@@ -185,9 +188,8 @@ def pdf_automation():
                             # Search for a specific word and retrieve its coordinates
                             keyword_matched_amount = matched_values[word]['value']
                             matched_word_string = matched_values[word]['word']
-                        
-                        
-                    
+
+                          
 
                             if matched_word_string == 'Benefits accrued as a result of operations before income tax':
                                 word_instances = page.search_for(keyword_matched_amount)
@@ -242,7 +244,7 @@ def pdf_automation():
                                                             pdf_writer.addLink(
                                                                 matched_goto_pagenumber,
                                                                 page_no_to_palce_link,
-                                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                                 border=[1,1,1]
                                                             )
                                                             break
@@ -305,7 +307,7 @@ def pdf_automation():
                                                             pdf_writer.addLink(
                                                                 matched_goto_pagenumber,
                                                                 page_no_to_palce_link,
-                                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                                 border=[1,1,1]
                                                             )
                                                             break
@@ -372,7 +374,7 @@ def pdf_automation():
                                                             pdf_writer.addLink(
                                                                 matched_goto_pagenumber,
                                                                 page_no_to_palce_link,
-                                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                                 border=[1,1,1]
                                                             )
                                                             break
@@ -382,7 +384,7 @@ def pdf_automation():
                             
                             elif matched_word_string == 'Income Tax Payable':
                                 word_instances = page.search_for(keyword_matched_amount)
-
+                            
                                 if len(word_instances) > 0:
                                     for instance in word_instances:
                                         x, y, x1, y1 = instance
@@ -414,11 +416,13 @@ def pdf_automation():
                                             texts = page.extract_text().split('\n')
                                             for text in texts:
                                                 if subsequent_word in text:
+                                                 
                                                     data = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b', text)
-
+                                                  
                                                     if data:
 
                                                         matched_data = data[-1]
+                                                       
                                                         doc = fitz.open(pdf_path)
                                                         matched_page = doc[matched_goto_pagenumber]
 
@@ -433,7 +437,7 @@ def pdf_automation():
                                                             pdf_writer.addLink(
                                                                 matched_goto_pagenumber,
                                                                 page_no_to_palce_link,
-                                                                RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                                 border=[1,1,1]
                                                             )
                                                             break
@@ -537,7 +541,7 @@ def pdf_automation():
                                                 pdf_writer.addLink(
                                                     matched_goto_pagenumber,
                                                     page_no_to_palce_link,
-                                                    RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                    RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                     border=[1, 1, 1]
                                                 )
                                                 tentative_matched_amount = None
@@ -601,7 +605,7 @@ def pdf_automation():
                                                 pdf_writer.addLink(
                                                     matched_goto_pagenumber,
                                                     page_no_to_palce_link,
-                                                    RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                    RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                     border=[1,1,1]
                                                 )
                                                 break
@@ -648,26 +652,30 @@ def pdf_automation():
                                                                     if third_word_Tofind in second_subsequent_line:
                                                                         # for end_line in lines[lines.index(subsequent_line) + 1:]:   
                                                                         #     if keyword_matched_amount in end_line:                                                           
-                                                                                matched_goto_pagenumber = page_num
-                                                                                break
-                                                                    #this if statement is used for next page to find the third word because it can't find means it goes to next page
-                                                                    if matched_page_number is not None:
-                                                                        i = page_num + 1
-                                                                        for data in enumerate(pdf.pages):
-                                                                            next_line = pdf.pages[i].extract_text().split('\n')
-                                                                            for end_line in next_line:
-                                                                                if third_word_Tofind in end_line:
-                                                                                    for end_line in next_line:
-                                                                                        # if keyword_matched_amount in end_line:
-                                                                                        matched_goto_pagenumber = i
-                                                                                        break
-                                                                            if matched_goto_pagenumber is None:
-                                                                                i += 1
-                                                                            else:
-                                                                                break
-                                                                        break
-                                                        
-                                            #To generate top link of the pdf
+                                                                        matched_goto_pagenumber = page_num
+                                                                        break  # Exit the innermost loop once you've found the third word
+                                                                if third_word_Tofind not in lines:
+                                                                    # If third word not found on the current page, continue searching on subsequent pages    
+                                                                    i = page_num + 1
+                                                                    while i < len(pdf.pages):
+                                                                        next_page_lines = pdf.pages[i].extract_text().split('\n') 
+                                                                        for next_line in next_page_lines:
+                                                                            if third_word_Tofind in next_line:
+                                                                                matched_goto_pagenumber = i
+                                                                                break # Exit the loop once you've found the third word on a later page
+                                                                        if matched_goto_pagenumber is not None:
+                                                                            break # Exit the loop if you've found the third word on a later page
+                                                                        i += 1 
+
+                                                                if matched_goto_pagenumber is not None:
+                                                                    break  # Exit the middle loop if you've found the third word
+                                                        if matched_goto_pagenumber is not None:
+                                                                break  # Exit the outer loop if you've found the third word
+
+                                                if matched_goto_pagenumber is not None:
+                                                    break  # Exit the loop if you've found the third word                   
+                                                
+                                            #to generate top link of the pdf
                                             pdf_writer.addLink(
                                                 page_no_to_palce_link, #top page to palce link
                                                 matched_goto_pagenumber, #Bottom page to place link
@@ -704,7 +712,7 @@ def pdf_automation():
                                                                 pdf_writer.addLink(
                                                                     matched_goto_pagenumber,
                                                                     page_no_to_palce_link,
-                                                                    RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                    RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                                     border=[1, 1, 1]
                                                                 )
                                                                 break
@@ -737,12 +745,14 @@ def pdf_automation():
 
                                                                                     if (decimal_value <= round_value +1 and decimal_value >= round_value -1):
                                                                                         keyword = f"{decimal_value:,.2f}"
-                                                                                        print(keyword, 'general Ledger')
+                                                                                        # print(keyword, 'general Ledger')
                                                                                         word_instances = matched_page.search_for(keyword)
 
                                                                                         break
                                                                 except:
                                                                        pass
+
+
 
                                                             if len(word_instances) > 0:
 
@@ -755,7 +765,7 @@ def pdf_automation():
                                                                 pdf_writer.addLink(
                                                                     matched_goto_pagenumber,
                                                                     page_no_to_palce_link,
-                                                                    RectangleObject([x-10, new_y, x1+10, (new_y + (y1 - y))]),
+                                                                    RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                                     border=[1, 1, 1]
                                                                 )
                                                                 break
@@ -778,42 +788,43 @@ def pdf_automation():
 
                     #Gather the inbetween amount and page no.
                     for page_num, page in enumerate(pdf.pages):
-                        lines = page.extract_text().split('\n')
-                        for line in lines:
-                            if start_account in line:
-                                # If start_account is  matched, search for end_account in subsequent lines
-                                matched_page_number = []
-                                data_lines = []
-                                for subsequent_line in lines[lines.index(line) + 1:]:
-                                    # values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))', subsequent_line)
-                                    values = re.findall(r' \b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))(?![0-9]{2}/[0-9]{2}/[0-9]{4})(?![0-9]{2}:[0-9]{2}:[0-9]{2})', subsequent_line)
+                        if page_num <=3:
+                            lines = page.extract_text().split('\n')
+                            for line in lines:
+                                if start_account in line:
+                                    # If start_account is  matched, search for end_account in subsequent lines
+                                    matched_page_number = []
+                                    data_lines = []
+                                    for subsequent_line in lines[lines.index(line) + 1:]:
+                                        # values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))', subsequent_line)
+                                        values = re.findall(r' \b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))(?![0-9]{2}/[0-9]{2}/[0-9]{4})(?![0-9]{2}:[0-9]{2}:[0-9]{2})', subsequent_line)
+                                    
+                                        if values: 
+                                            compare_val = values[0].replace(',', '').strip()
+                                            if float(compare_val) > 300: 
+                                                data_lines.append(values[0])
+                                                matched_page_number.append(page_num)
+                                        if end_account in subsequent_line:
+                                            #If end_account is found, extract the data from the collected lines
+                                            matched_client_values[start_account] = (data_lines[:-1], matched_page_number[:-1])
+                                            break #Exit the loop if end_account is found
+                                        else:
+                                            nextPage = page_num + 1
+                                            lines = pdf.pages[nextPage].extract_text().split('\n')
+                                            for line in lines:
+                                                # values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))', line)
+                                                values = re.findall(r' \b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))(?![0-9]{2}/[0-9]{2}/[0-9]{4})(?![0-9]{2}:[0-9]{2}:[0-9]{2})', line)
+                                            
+                                                if values:
+                                                    compare_val = values[0].replace(',', '').strip() 
+                                                    if float(compare_val) > 300:
+                                                        data_lines.append(values[0])
+                                                        matched_page_number.append(nextPage)
+                                                if end_account in line:
+                                                    matched_client_values[start_account] = (data_lines[:-1], matched_page_number[:-1])
+                                                    break
+                                    break #Exit the loop if start_account is found
                                 
-                                    if values: 
-                                        compare_val = values[0].replace(',', '').strip()
-                                        if float(compare_val) > 300: 
-                                            data_lines.append(values[0])
-                                            matched_page_number.append(page_num)
-                                    if end_account in subsequent_line:
-                                        #If end_account is found, extract the data from the collected lines
-                                        matched_client_values[start_account] = (data_lines[:-1], matched_page_number[:-1])
-                                        break #Exit the loop if end_account is found
-                                    else:
-                                        nextPage = page_num + 1
-                                        lines = pdf.pages[nextPage].extract_text().split('\n')
-                                        for line in lines:
-                                            # values = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))', line)
-                                            values = re.findall(r' \b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?![^()]*\))(?![0-9]{2}/[0-9]{2}/[0-9]{4})(?![0-9]{2}:[0-9]{2}:[0-9]{2})', line)
-                                        
-                                            if values:
-                                                compare_val = values[0].replace(',', '').strip() 
-                                                if float(compare_val) > 300:
-                                                    data_lines.append(values[0])
-                                                    matched_page_number.append(nextPage)
-                                            if end_account in line:
-                                                matched_client_values[start_account] = (data_lines[:-1], matched_page_number[:-1])
-                                                break
-                                break #Exit the loop if start_account is found
-                            
                     # print all matched data and their respective page numbers - for client member' account benefits
 
                     #find out the above matched value with below specified member_statementSring value  and place the top link
