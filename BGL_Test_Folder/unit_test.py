@@ -26,8 +26,8 @@ def pdf_automation():
 
         # path_folder = 'C:\BGL_Test_Folder'
                               
-        path_folder = input('Enter the path of your "PDF" file      : ')
-        out_path_folder = input('Enter the output path to save the "PDF": ')
+        path_folder = input('\n'+'Enter the path of your "PDF" file      : ')
+        out_path_folder = input('\n'+'Enter the output path to save the "PDF": ')
 
         for root, dirs, files in os.walk(path_folder):
             for pdf_file in files:
@@ -250,7 +250,7 @@ def pdf_automation():
                                                             break
                                         except Exception as e:
                                         
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass    
 
                             elif matched_word_string == 'Income Tax Expense' or  matched_word_string == 'Income Tax Refundable':
@@ -313,7 +313,7 @@ def pdf_automation():
                                                             break
                                         except Exception as e:
                                         
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass    
 
                             elif matched_word_string == 'Trust Distributions' or matched_word_string == 'Dividends Received':
@@ -379,7 +379,7 @@ def pdf_automation():
                                                             )
                                                             break
                                         except:
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass 
                             
                             elif matched_word_string == 'Income Tax Payable':
@@ -443,7 +443,7 @@ def pdf_automation():
                                                             break
                                         except Exception as e:
                                     
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass    
                             
                             elif (matched_word_string == 'Managed Investments (Australian)' or matched_word_string == 'Managed Investments (Overseas)' or
@@ -544,11 +544,11 @@ def pdf_automation():
                                                     RectangleObject([x-20, new_y, x1+20, (new_y + (y1 - y))]),
                                                     border=[1, 1, 1]
                                                 )
-                                                tentative_matched_amount = None
+                                                # tentative_matched_amount = None
                                                 break
                                         except Exception as e:
                                         
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass    
                             
                             elif matched_word_string == 'ANZ - E*trade Cash Investment Account' or matched_word_string == 'CBA Direct Investment Account':
@@ -611,7 +611,7 @@ def pdf_automation():
                                                 break
                                         except Exception as e:
                                     
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass    
                             
                             else:
@@ -633,7 +633,7 @@ def pdf_automation():
                                             if (word == 'Employer Contributions' or word == 'Personal Non Concessional' or word == 'Personal Concessional' or word == 'Other Contributions'):
                                                 second_word_Tofind = 'Contributions'
                                             else:    
-                                                second_word_Tofind = word
+                                                second_word_Tofind = matched_word_string
 
                                             if word in word_based_credits:
                                                 third_word_Tofind = 'Total Credits'
@@ -654,18 +654,18 @@ def pdf_automation():
                                                                         #     if keyword_matched_amount in end_line:                                                           
                                                                         matched_goto_pagenumber = page_num
                                                                         break  # Exit the innermost loop once you've found the third word
-                                                                if third_word_Tofind not in lines:
-                                                                    # If third word not found on the current page, continue searching on subsequent pages    
-                                                                    i = page_num + 1
-                                                                    while i < len(pdf.pages):
-                                                                        next_page_lines = pdf.pages[i].extract_text().split('\n') 
-                                                                        for next_line in next_page_lines:
-                                                                            if third_word_Tofind in next_line:
-                                                                                matched_goto_pagenumber = i
-                                                                                break # Exit the loop once you've found the third word on a later page
-                                                                        if matched_goto_pagenumber is not None:
-                                                                            break # Exit the loop if you've found the third word on a later page
-                                                                        i += 1 
+                                                                    elif third_word_Tofind not in lines:
+                                                                        # If third word not found on the current page, continue searching on subsequent pages    
+                                                                        i = page_num + 1
+                                                                        while i < len(pdf.pages):
+                                                                            next_page_lines = pdf.pages[i].extract_text().split('\n') 
+                                                                            for next_line in next_page_lines:
+                                                                                if third_word_Tofind in next_line:
+                                                                                    matched_goto_pagenumber = i
+                                                                                    break # Exit the loop once you've found the third word on a later page
+                                                                            if matched_goto_pagenumber is not None:
+                                                                                break # Exit the loop if you've found the third word on a later page
+                                                                            i += 1 
 
                                                                 if matched_goto_pagenumber is not None:
                                                                     break  # Exit the middle loop if you've found the third word
@@ -769,10 +769,10 @@ def pdf_automation():
                                                                     border=[1, 1, 1]
                                                                 )
                                                                 break
-
+                                            matched_word_string  = None                  
                                         except Exception as e:
                                         
-                                            Link_notGenerated.append(word)
+                                            Link_notGenerated.append(matched_word_string)
                                             pass           
                                         
                                 # else:
@@ -897,6 +897,7 @@ def pdf_automation():
                                             else:
                                                 break
                                         except:
+                                           
                                             pass
 
                                         break
@@ -918,7 +919,7 @@ def pdf_automation():
                                             border=[1,1,1]
                                         )
                                     except Exception as e:
-                                    
+                                        # Link_notGenerated.append()
                                         pass
                             
                             #This for below matched amount to set bottom to top link in the pdf
@@ -950,7 +951,7 @@ def pdf_automation():
                                             border=[1,1,1]
                                         )
                                     except Exception as e:
-                                    
+                                        # Link_notGenerated.append(word)
                                         pass
 
                                 else:
@@ -958,20 +959,23 @@ def pdf_automation():
 
                     #End memeber statement 
                     # Link_notGenerated.pop(-2)
-                    # print(Link_notGenerated)
+                    print(Link_notGenerated)
                     
                     # save the modified PDF
                     filename = os.path.splitext(pdf_file)[0] #Extract the filename without extension
                     output_file = path.join(out_path_folder, f'Automated_link_{filename}.pdf')
 
-                    # output_file_error_log = path.join(path_folder, f'Error_log_File_{filename}.txt')
-                    # with open(output_file_error_log, 'w') as file:
-                    #     file.write("_______________ Failing to generate link for this below Word's _______________"+'\n')
-                    #     file.write('\n')
-                    #     for item in Link_notGenerated:
-                    #         file.write(item + '\n')
-                    #         file.write('\n')
-                    # print(f'Data has been written to {output_file_error_log}')
+                    output_file_error_log = path.join(out_path_folder, f'Error_log_File_{filename}.txt')
+                    with open(output_file_error_log, 'w') as file:
+                        file.write("Filename:  "+filename+ ""+'\n')
+                        file.write('\n')
+                        file.write("_______________ Failing to generate link for this below Word's _______________"+'\n')
+                        file.write('\n')
+                        for item in list(set(Link_notGenerated)):
+                            if item is not None:
+                                file.write(item + '\n')
+                                file.write('\n')
+                    print(f'Data has been written to {output_file_error_log}')
 
                     with open(output_file, 'wb') as link_pdf:
                         pdf_writer.write(link_pdf)
