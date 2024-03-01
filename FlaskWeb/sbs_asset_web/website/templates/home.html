@@ -1,0 +1,147 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<h1 align="center">Assets</h1>
+
+<form id="filterForm" action="/filter" method="POST">
+  <h3 align="left">Filter - Assets</h3> <br />
+  <div class="form-floating mb-1">
+    <input class="form-control"  placeholder="Bay_No" name="Bay_No" id="Bay_No" class="form-control"/> <br/>
+    <input class="form-control"  placeholder="Employee_Id" name="Employee_Id" id="Employee_Id" class="form-control"/>
+   </div>
+  <br />
+  <div align="left">
+    <button   type="submit" id="filterButton" class="btn btn-primary">🔍</button>
+  </div>
+  <br/>
+</form>
+
+<h3 align="left">Filtered Results</h3>
+<table class="table table-striped table-hover" id="filter">
+  <th >Bay_No</th>
+  <th>Employee_Id</th>
+  {% for x in filtered_assets %}
+    <tr>
+     <td> {{ x.Bay_No }}</td>
+      <!-- <td>{{ x.Employee_Id }}</td> -->
+      <td> <input class="form-control"  value='{{ x.Employee_Id }}' name="new_Employee_Id" id="new_Employee_Id" class="form-control"/></td>
+
+      <td><button type="button"  onClick="updateAsset({{ x.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button></td>
+    </tr>
+
+  </li>
+  {% endfor %}
+</table>
+
+
+<h3 align="left">Total Asset List</h3>
+<table class="table table-striped table-hover" id="notes">
+  <th >Bay_No</th>
+  <th>Employee_Id</th>
+  <th>Update 📎</th>
+  <th>Delete 🗑</th>
+  {% for note in asset_all_details %}
+    <tr>
+     <td> {{ note.Bay_No }}</td>
+      <td> <input class="form-control"  value='{{ note.Employee_Id }}' name="Employee_Id" id="Employee_Id" class="form-control"/></td>
+
+      <!-- <td><button type="button"  onClick="updateAsset({{ note.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button></td> -->
+      <td><button type="button" class="close" onClick="deleteNote({{ note.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button></td>
+    </tr>
+  </li>
+  {% endfor %}
+</table>
+
+
+<h3 align="left">Add Asset</h3>
+<form action='\' method="POST">
+  <!-- <input name="note" id="note" class="form-control"/> -->
+  <br />
+  <div class="form-floating mb-1">
+    <input class="form-control"  placeholder="Bay_No" name="Bay_No" id="Bay_No" class="form-control"/>
+   </div>
+  <br />
+  <div class="form-floating mb-3">
+    <input class="form-control"  placeholder="Employee_Id" name="Employee_Id" id="Employee_Id" class="form-control"/>
+   </div>
+  <br />
+  <input name="Employee_Name" id="Employee_Name" class="form-control"/>
+  <br />
+  <input name="Department" id="Department" class="form-control"/>
+  <br />
+  <input name="Program" id="Program" class="form-control"/>
+  <br />
+  <input name="Client_name" id="Client_name" class="form-control"/>
+  <br />
+  <input name="Cost_Center_Code" id="Cost_Center_Code" class="form-control"/>
+  <br />
+  <input name="Vertical" id="Vertical" class="form-control"/>
+  <br />
+  <input name="WFH_WFO" id="WFH_WFO" class="form-control"/>
+  <br />
+  <input name="Sharing" id="Sharing" class="form-control"/>
+  <br />
+  <input name="Device" id="Device" class="form-control"/>
+  <br />
+  <input name="Device_Status" id="Device_Status" class="form-control"/>
+  <br />
+  <input name="Device_Model" id="Device_Model" class="form-control"/>
+  <br />
+  <input name="Asset" id="Asset" class="form-control"/>
+  <br />
+  <input name="Serial_No" id="Serial_No" class="form-control"/>
+  <br />
+  <input name="Asset_Owner" id="Asset_Owner" class="form-control"/>
+  <br />
+  <input name="Warranty_Status" id="Warranty_Status" class="form-control"/>
+  <br />
+  <input name="Purchase_Date" id="Purchase_Date" class="form-control"/>
+  <br />
+  <input name="Warranty_Exp_Date" id="Warranty_Exp_Date" class="form-control"/>
+  <br />
+  <input name="Configuration" id="Configuration" class="form-control"/>
+  <br />
+  <input name="Monitor_1_Size" id="Monitor_1_Size" class="form-control"/>
+  <br />
+  <input name="Monitor_1_Asset" id="Monitor_1_Asset" class="form-control"/>
+  <br />
+  <input name="Monitor_1_Owner" id="Monitor_1_Owner" class="form-control"/>
+  <br />
+  <input name="Monitor_2_Size" id="Monitor_2_Size" class="form-control"/>
+  <br />
+  <input name="Monitor_2_Asset" id="Monitor_2_Asset" class="form-control"/>
+  <br />
+  <input name="Monitor_2_Owner" id="Monitor_2_Owner" class="form-control"/>
+  <br />
+  <input name="Headphone" id="Headphone" class="form-control"/>
+  <br />
+  <input name="Software" id="Software" class="form-control"/>
+  <br />
+  <input name="previous_Asset" id="previous_Asset" class="form-control"/>
+  <br />
+  <input name="Remarks" id="Remarks" class="form-control"/>
+  <br />
+  <input name="Faulty_Status" id="Faulty_Status" class="form-control"/>
+  <br />
+  <input name="Faulty_Sent_date" id="Faulty_Sent_date" class="form-control"/>
+  <br />
+  <input name="Gatepass_No" id="Gatepass_No" class="form-control"/>
+  <br />
+  <input name="Gatepass_IN" id="Gatepass_IN" class="form-control"/>
+  <br />
+  <input name="Gatepass_OUT" id="Gatepass_OUT" class="form-control"/>
+  <br />
+  <div align="left">
+    <button type="submit" class="btn btn-primary">+</button>
+  </div>
+</form>
+</br>
+
+
+
+{% endblock %}
