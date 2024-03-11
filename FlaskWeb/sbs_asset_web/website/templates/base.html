@@ -14,7 +14,11 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
     <title>{% block title %}Home{% endblock %}</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
@@ -105,10 +109,20 @@
 
 <script type="text/javascript">
 
-function updateAsset(asset_Id) {
-  alert('hi')
-  var new_employee_id = document.getElementById('new_Employee_Id').value;
-  alert(new_employee_id)
+function TotalupdateAsset(asset_Id) {
+
+var new_employee_id = document.getElementById('new_Employee_Id').value;
+
+ Swal.fire({
+    title: "Do you confirm to update?",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonText: "Yes, update it!",
+    cancelButtonText: "No, cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // $('.filter').prop( "disabled", false)
+
   fetch("/update", {
     method: "POST",
     body: JSON.stringify({ asset_Id: asset_Id, new_employee_id: new_employee_id }),
@@ -117,11 +131,54 @@ function updateAsset(asset_Id) {
     }
   }).then((_res) => {
     window.location.href = "/";
+    // $('.filter').prop( "disabled", false )  
+    // $('.filter').css("display", "None");
+  });
+}
+else {
+      // If user clicks "No, cancel"
+      // Do nothing or handle as needed
+    }
   });
 }
 
 
-</script>
+
+function updateAsset(asset_Id) {
+
+  var new_employee_id = document.getElementById('new_Employee_Id').value;
+
+   Swal.fire({
+      title: "Do you confirm to update?",
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: "Yes, update it!",
+      cancelButtonText: "No, cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // $('.filter').prop( "disabled", false)
+  
+    fetch("/update", {
+      method: "POST",
+      body: JSON.stringify({ asset_Id: asset_Id, new_employee_id: new_employee_id }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((_res) => {
+      window.location.href = "/";
+      // $('.filter').prop( "disabled", false )  
+      // $('.filter').css("display", "None");
+    });
+  }
+  else {
+        // If user clicks "No, cancel"
+        // Do nothing or handle as needed
+      }
+    });
+  }
+  </script>
+
+
 {% endblock %}
   </body>
 </html>

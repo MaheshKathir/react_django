@@ -17,13 +17,13 @@ def home():
         Employee_Id = request.form.get('Employee_Id')
 
         if len(Employee_Id) < 1:
-            flash('Note is too short!', category='error') 
+            flash('Data is too short!', category='error') 
         else:
             new_note = Assets(Bay_No=Bay_No,Employee_Id=Employee_Id, user_id=current_user.id)  #providing the schema for the note 
             db.session.add(new_note) #adding the note to the database 
             db.session.commit()
-            flash('Note added!', category='success')
-            
+            flash('Data added!', category='success')
+
     asset_all_details = Assets.query.all()
 
     return render_template("home.html", asset_all_details=asset_all_details, user=current_user)
@@ -34,14 +34,15 @@ def filter():
     if request.method == 'POST':
         # Bay_No = request.form.get('Bay_No')
         Employee_Id = request.form.get('Employee_Id')
-        # print(Employee_Id)
+        print(Employee_Id)
 
         # Assuming Assets is your model and you have a column 'Bay_No' and 'Employee_Id'
         filtered_assets = Assets.query.filter_by(Employee_Id=Employee_Id).all()
+        asset_all_details = Assets.query.all()
         # print(filtered_assets)
 
         # Pass the filtered results to the template
-        return render_template("home.html", filtered_assets=filtered_assets, user=current_user)
+        return render_template("home.html", filtered_assets=filtered_assets,asset_all_details=asset_all_details, user=current_user)
     
 
     # Handle other cases, e.g., invalid request method
@@ -78,7 +79,7 @@ def update():
        
         db.session.commit()
 
-        flash('Record updated successfully!', category='success')
+        flash('Data updated successfully!', category='success')
        
 
         return render_template("home.html", filtered_assets=filtered_assets, user=current_user)
